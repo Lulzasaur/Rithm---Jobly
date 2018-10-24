@@ -54,6 +54,8 @@ class Company {
         RETURNING handle,name,num_employees,description,logo_url
         `,[handle,name,numEmployees,description,logoURL])
 
+      Company.findHandle(company.rows[0])
+
       return company.rows[0]
     } catch(e){
       throw e
@@ -67,6 +69,8 @@ class Company {
         FROM companies
         WHERE handle = $1
         `,[handle.toUpperCase()])
+      
+      Company.findHandle(company.rows[0])
 
       return company.rows[0]
     } catch(e){
@@ -81,6 +85,8 @@ class Company {
       let company = await db.query(
         queryData.query,queryData.values
       )
+
+      Company.findHandle(company.rows[0])
  
       return company.rows[0];
     } catch (e) {
@@ -90,17 +96,26 @@ class Company {
 
   static async deleteCompany(handle) {
     try {
-
       let company = await db.query(
         `DELETE FROM companies
         WHERE handle = $1
         RETURNING handle
-        `,[handle]
+        `,[handle.toUpperCase()]
       );
+
+      Company.findHandle(company.rows[0])
 
       return company.rows[0]
     } catch (e) {
       throw e;
+    }
+  }
+
+  static findHandle(rows){
+    if(!rows){
+      let err = new Error('Not Found')
+      err.status = 404;
+      throw err
     }
   }
 

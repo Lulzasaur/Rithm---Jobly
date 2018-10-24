@@ -18,8 +18,8 @@ router.get("/", async function (req, res, next) {
 
 router.post("/", async function (req, res, next) {
   try {
-    let {handle,name,numEmployees,description,logoURL} = req.body
-    const companyResp = await Company.createCompany(handle,name,numEmployees,description,logoURL);
+    let {handle,name,num_employees,description,logo_url} = req.body
+    const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
     return res.json({ company:companyResp });
   } catch (err) {
     return next(err);
