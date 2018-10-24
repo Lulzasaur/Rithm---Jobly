@@ -59,6 +59,20 @@ class Company {
     }
   }
 
+  static async getCompany(handle) {
+    try{
+      let company = await db.query(
+        `SELECT handle,name,num_employees,description,logo_url
+        FROM companies
+        WHERE handle = $1
+        `,[handle])
+
+      return company.rows[0]
+    } catch(e){
+      throw e
+    }
+  }
+
 }
 
 

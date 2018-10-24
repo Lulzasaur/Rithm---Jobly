@@ -26,5 +26,14 @@ router.post("/", async function (req, res, next) {
   }
 });
 
+router.get("/:handle", async function (req, res, next) {
+  try {
+    let handle = req.params
+    const companyResp = await Company.getCompany(handle);
+    return res.json({ company:companyResp });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 module.exports = router;
