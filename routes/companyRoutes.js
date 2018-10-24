@@ -40,7 +40,17 @@ router.patch('/:handle', async function(req, res, next) {
   try {
     let { handle } = req.params;
     const companyResp = await Company.updateCompany(handle,req.body)
-    return res.json({company:companyResp})
+    return res.json({ company: companyResp })
+  } catch (err) {
+    next(err);
+  }
+})
+
+router.delete('/:handle', async function(req, res, next) {
+  try {
+    let { handle } = req.params;
+    const companyResp = await Company.deleteCompany(handle)
+    return res.json({message:"Company deleted"})
   } catch (err) {
     next(err);
   }

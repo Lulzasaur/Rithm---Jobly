@@ -88,6 +88,22 @@ class Company {
     }
   }
 
+  static async deleteCompany(handle) {
+    try {
+
+      let company = await db.query(
+        `DELETE FROM companies
+        WHERE handle = $1
+        RETURNING handle
+        `,[handle]
+      );
+
+      return company.rows[0]
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }
 
 
