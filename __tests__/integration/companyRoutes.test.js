@@ -98,6 +98,22 @@ describe("POST /", () => {
   });
     expect(response.statusCode).toBe(200);
   });
+
+  test("It should respond with an error for schema validation", async () => {
+    const response = await request(app).post("/companies").send(
+          {
+            "handle": 2342342,
+            "name":"Tesla, Inc.",
+            "num_employees": 2000,
+            "description": "FUNDING SECURED",
+            "logo_url": "www.FUNDINGSECURED.com"
+          }
+    );
+    expect(response.body).toEqual({"error": ["instance.handle is not of a type(s) string"]}
+    );
+    expect(response.statusCode).toBe(500);
+  });
+
 });
 
 //test for viewing a single company
@@ -142,6 +158,17 @@ describe("PATCH /", () => {
           }
   });
     expect(response.statusCode).toBe(200);
+  });
+
+  test("It should respond with an error for schema validation", async () => {
+    const response = await request(app).patch("/companies/aapl").send(
+          {
+            "num_employees": "FIVEMILLION",
+          }
+    );
+    expect(response.body).toEqual({"error": ["instance.num_employees is not of a type(s) integer"]}
+    );
+    expect(response.statusCode).toBe(500);
   });
 });
 
