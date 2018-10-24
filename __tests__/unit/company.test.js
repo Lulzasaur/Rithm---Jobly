@@ -5,6 +5,7 @@ const app = require("../../app");
 
 const Company = require('../../models/companyModels')
 
+// set up table
 beforeAll(async () => {
   await db.query(`CREATE TABLE companies (
     handle TEXT PRIMARY KEY,
@@ -45,6 +46,7 @@ await db.query("DROP TABLE companies");
 db.end();
 });
 
+//Unit test to just test the function in Company model
 describe("findAll()", () => {
   it("should generate a list of all companies",
      async function () {
