@@ -5,6 +5,16 @@ const app = require("../../app");
 
 const Company = require('../../models/companyModels')
 
+
+
+const AAPL_DATA = {
+  "handle": "AAPL",
+  "name": "Apple Inc",
+  "num_employees": 10000,
+  "description": "Computer maker",
+  "logo_url": "www.apple.com"
+}
+
 /***********************************/
 /** setup and teardown */
 
@@ -49,6 +59,7 @@ afterAll(async () => {
   db.end();
 });
 
+
 /***********************************/
 /** TEST: findAll() */
 
@@ -60,13 +71,7 @@ describe("findAll()", () => {
     const response = await Company.findAll();
     expect(response).toEqual(
       [
-        {
-          "description": "Computer maker",
-          "handle": "AAPL",
-          "logo_url": "www.apple.com",
-          "name": "Apple Inc",
-          "num_employees": 10000,
-        },
+        AAPL_DATA,
         {
           "description": "Snake oil salesmen",
           "handle": "DPW",
@@ -84,13 +89,7 @@ describe("findAll()", () => {
     async function () {
       const response = await Company.findAll(0,99000,'pple');
       expect(response).toEqual(
-        [{
-          "description": "Computer maker",
-          "handle": "AAPL",
-          "logo_url": "www.apple.com",
-          "name": "Apple Inc",
-          "num_employees": 10000,
-        }]
+        [AAPL_DATA]
       );
       expect(response.length).toBe(1)
   });
@@ -101,13 +100,7 @@ describe("findAll()", () => {
 
     const response = await Company.findAll(900);
     expect(response).toEqual(
-      [{
-        "description": "Computer maker",
-         "handle": "AAPL",
-        "logo_url": "www.apple.com",
-         "name": "Apple Inc",
-        "num_employees": 10000,
-       }]
+      [AAPL_DATA]
     );
     expect(response.length).toBe(1)
   });
@@ -115,10 +108,56 @@ describe("findAll()", () => {
 
 
 /***********************************/
+/** TEST: getCompany() */
+
+describe('getCompany()', () => {
+  // test get company, with existing company handle
+  it("Should return an object containing the selected company's details",
+    async function() {
+      let handle = 'aapl';
+      const response = await Company.getCompany(handle);
+
+      expect(response).toEqual(AAPL_DATA);
+    }
+  );
+
+  // test get company, with not existing company handle
+  it("Should return an object containing the selected company's details",
+    async function() {
+      let handle = 'something fake';
+      Company.getCompany(handle)
+      .then(res => {
+        expect(res).toEqual(AAPL_DATA);
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found')
+      }); 
+    }
+  );
+});
+
+
+/***********************************/
+/** TEST: createCompany() */
+
+describe('createCompany()', () => {
+  // test for create with valid data
+
+
+  // test for create with missing data
+
+
+  // test for create with invalid data
+})
+
+
+
+/***********************************/
 /** TEST: updateCompany() */
 
 describe('updateCompany()', () => {
-  // test updating all fields for company
+
+  // test for ALL fields for company
   it("Should return JSON containing the new company data, updating all",
     async function() {
       let handle = 'aapl'
@@ -129,18 +168,23 @@ describe('updateCompany()', () => {
         "logo_url": "www.apple.com/logo.png"
       }
 
-      const response = await Company.updateCompany(handle, data);
-      expect(response).toEqual({
-        "handle": "AAPL",
-        "name": "Apple Inc.",
-        "num_employees": 25000,
-        "description": "Electronics and Computing company",
-        "logo_url": "www.apple.com/logo.png"
+      Company.updateCompany(handle, data)
+      .then(res => {
+        expect(res).toEqual({
+          "handle": "AAPL",
+          "name": "Apple Inc.",
+          "num_employees": 25000,
+          "description": "Electronics and Computing company",
+          "logo_url": "www.apple.com/logo.png"
+        })
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found')
       });
     }
   );
 
-  // test updating some fields for company
+  // test SOME fields for company
   it("Should return JSON containing the new company data, updating some",
     async function() {
       let handle = 'aapl'
@@ -149,15 +193,83 @@ describe('updateCompany()', () => {
         "num_employees": 40000
       }
 
-      const response = await Company.updateCompany(handle, data);
-      expect(response).toEqual({
-        "handle": "AAPL",
-        "name": "Apple Corporation",
-        "num_employees": 40000,
-        "description": "Computer maker",
-        "logo_url": "www.apple.com"
+      Company.updateCompany(handle, data)
+      .then(res => {
+        expect(res).toEqual({
+          "handle": "AAPL",
+          "name": "Apple Corporation",
+          "num_employees": 40000,
+          "description": "Computer maker",
+          "logo_url": "www.apple.com"
+        })
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found')
       });
     }
   );
-})
+
+  // test for not existing company handle
+  it("Should return JSON containing the new company data, updating some",
+    async function() {
+      let handle = 'something fake'
+      let data = {
+        "name": "Apple Corporation",
+        "num_employees": 40000
+      }
+
+      Company.updateCompany(handle, data)
+      .then(res => {
+        expect(res).toEqual({
+          "handle": "AAPL",
+          "name": "Apple Corporation",
+          "num_employees": 40000,
+          "description": "Computer maker",
+          "logo_url": "www.apple.com"
+        })
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found')
+      });
+    }
+  );
+});
+
+
+
+
+/***********************************/
+/** TEST: deleteCompany() */
+
+describe('deleteCompany()', () => {
+  // test for delete with existing company handle
+  it("Should return a message: \"Company deleted\"",
+    async function() {
+      let handle = 'aapl';
+
+      Company.deleteCompany(handle)
+      .then(res => {
+        expect(res.message).toEqual(handle);
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found');
+      });
+    }
+  );
+
+  // test for not existing company handle
+  it("Should throw a 404 Not Found error",
+    async function() {
+      let handle = 'something fake';
+
+      Company.deleteCompany(handle)
+      .then(res => {
+        expect(res).toEqual(handle);
+      })
+      .catch(err => {
+        expect(err.message).toEqual('Not Found');
+      });
+    }
+  );
+});
 
