@@ -107,6 +107,45 @@ describe("findAll()", () => {
 });
 
 describe('updateCompany()', () => {
+/* Company.updateCompany(str:handle, obj:data) */
+  it("Should return JSON containing the new company data, updating all",
+    async function() {
+      let handle = 'aapl'
+      let data = {
+        "name": "Apple Inc.",
+        "num_employees": 25000,
+        "description": "Electronics and Computing company",
+        "logo_url": "www.apple.com/logo.png"
+      }
 
+      const response = await Company.updateCompany(handle, data);
+      expect(response).toEqual({
+        "handle": "AAPL",
+        "name": "Apple Inc.",
+        "num_employees": 25000,
+        "description": "Electronics and Computing company",
+        "logo_url": "www.apple.com/logo.png"
+      });
+    }
+);
+
+  it("Should return JSON containing the new company data, updating some",
+    async function() {
+      let handle = 'aapl'
+      let data = {
+        "name": "Apple Corporation",
+        "num_employees": 40000
+      }
+
+      const response = await Company.updateCompany(handle, data);
+      expect(response).toEqual({
+        "handle": "AAPL",
+        "name": "Apple Corporation",
+        "num_employees": 40000,
+        "description": "Computer maker",
+        "logo_url": "www.apple.com"
+      });
+    }
+  );
 })
 
