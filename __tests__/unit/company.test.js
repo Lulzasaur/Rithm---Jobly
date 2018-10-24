@@ -65,7 +65,7 @@ afterAll(async () => {
 
 describe("findAll()", () => {
   // test find all companies
-  it("should generate a list of all companies",
+  it("should return a list of all companies",
     async function () {
 
     const response = await Company.findAll();
@@ -85,7 +85,7 @@ describe("findAll()", () => {
   });
 
   // test find all companies filtered by search query
-  it("should generate a list of companies based off 'pple' search parameter",
+  it("should return a list of companies filtered by search query 'pple'",
     async function () {
       const response = await Company.findAll(0,99000,'pple');
       expect(response).toEqual(
@@ -95,7 +95,7 @@ describe("findAll()", () => {
   });
 
   // test all companies filtered by number of employees
-  it("should generate a list of companies based off employees search parameter",
+  it("should return a list of companies filtered by number of employees",
     async function () {
 
     const response = await Company.findAll(900);
@@ -122,7 +122,7 @@ describe('getCompany()', () => {
   );
 
   // test get company, with not existing company handle
-  it("Should return an object containing the selected company's details",
+  it("Should return a 404 error",
     async function() {
       let handle = 'something fake';
       Company.getCompany(handle)
@@ -130,7 +130,7 @@ describe('getCompany()', () => {
         expect(res).toEqual(AAPL_DATA);
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found')
+        expect(err.status).toBe(404);
       }); 
     }
   );
@@ -142,10 +142,57 @@ describe('getCompany()', () => {
 
 describe('createCompany()', () => {
   // test for create with valid data
+  it("Should insert a new company in database and return the newly created company details",
+    async function() {
+
+      //createCompany(handle,name,numEmployees,description,logoURL)
+      let data = {
+        "handle": "SKIS",
+        "name": "Peak Resorts Inc.",
+        "num_employees": 650,
+        "description": "Snowsports Resort Corporation",
+        "logo_url": "https://www.newenglandskihistory.com/skiareamanagement/logopeakresorts.jpg"
+      };
+
+      let { handle, name, num_employees, description, logo_url } = data;
+
+      Company.createCompany(handle, name, num_employees, description, logo_url)
+      .then(res => {
+        expect(res).toEqual(data);
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      })
+    } 
+  );
 
 
-  // test for create with missing data
+  // test for create with missing non-required data
+  it("Should insert a new company with missing values as null",
+    async function() {
+      let data = {
+        "handle": "DELT",
+        "name": "Delta Technology Holdings Ltd",
+      };
 
+      let { handle, name, num_employees, description, logo_url } = data;
+
+      Company.createCompany(handle, name, num_employees, description, logo_url)
+      .then(res => {
+        expect(res).toEqual({
+          "handle": "DELT",
+          "name": "Delta Technology Holdings Ltd",
+          "num_employees": null,
+          "description": null,
+          "logo_url": null
+        });
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      })
+      //createCompany(handle,name,numEmployees,description,logoURL) 
+    } 
+  );
 
   // test for create with invalid data
 })
@@ -157,8 +204,8 @@ describe('createCompany()', () => {
 
 describe('updateCompany()', () => {
 
-  // test for ALL fields for company
-  it("Should return JSON containing the new company data, updating all",
+  // test for ALL fields
+  it("Should return JSON containing the new company data, updating ALL fields",
     async function() {
       let handle = 'aapl'
       let data = {
@@ -179,13 +226,13 @@ describe('updateCompany()', () => {
         })
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found')
+        expect(err.status).toBe(404);
       });
     }
   );
 
   // test SOME fields for company
-  it("Should return JSON containing the new company data, updating some",
+  it("Should return JSON containing the new company data, updating SOME fields",
     async function() {
       let handle = 'aapl'
       let data = {
@@ -204,13 +251,13 @@ describe('updateCompany()', () => {
         })
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found')
+        expect(err.status).toBe(404);
       });
     }
   );
 
   // test for not existing company handle
-  it("Should return JSON containing the new company data, updating some",
+  it("Should return 404 error",
     async function() {
       let handle = 'something fake'
       let data = {
@@ -229,7 +276,7 @@ describe('updateCompany()', () => {
         })
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found')
+        expect(err.status).toBe(404);
       });
     }
   );
@@ -243,22 +290,22 @@ describe('updateCompany()', () => {
 
 describe('deleteCompany()', () => {
   // test for delete with existing company handle
-  it("Should return a message: \"Company deleted\"",
+  it("Should return the handle that was deleted",
     async function() {
-      let handle = 'aapl';
+      let handle = 'AAPL';
 
       Company.deleteCompany(handle)
       .then(res => {
-        expect(res.message).toEqual(handle);
+        expect(res).toEqual({handle});
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found');
+        expect(err.status).toBe(404);
       });
     }
   );
 
   // test for not existing company handle
-  it("Should throw a 404 Not Found error",
+  it("Should throw a 404 error",
     async function() {
       let handle = 'something fake';
 
@@ -267,7 +314,7 @@ describe('deleteCompany()', () => {
         expect(res).toEqual(handle);
       })
       .catch(err => {
-        expect(err.message).toEqual('Not Found');
+        expect(err.status).toBe(404);
       });
     }
   );
