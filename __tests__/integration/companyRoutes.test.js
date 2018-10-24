@@ -46,4 +46,3 @@ await db.query("DROP TABLE companies");
 db.end();
 });
 
-

@@ -76,11 +76,13 @@ class Company {
 
   static async updateCompany(handle, data) {
     try {
-      let queryData = partialUpdate('companies', data, 'handle', handle);
-      
-      console.log(queryData);
+      let queryData = partialUpdate('companies', data, 'handle', handle.toUpperCase());
+
+      let company = await db.query(
+        queryData.query,queryData.values
+      )
  
-      return queryData;
+      return company.rows[0];
     } catch (e) {
       throw e;
     }
