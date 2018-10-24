@@ -5,6 +5,9 @@ const app = require("../../app");
 
 const Company = require('../../models/companyModels')
 
+/***********************************/
+/** setup and teardown */
+
 // set up table
 beforeAll(async () => {
   await db.query(`CREATE TABLE companies (
@@ -16,40 +19,43 @@ beforeAll(async () => {
   )`)
 });
 
-beforeEach(async () => {
 // seed with some data
-await db.query(`INSERT INTO companies (
-   handle,
-   name,
-   num_employees,
-   description,
-   logo_url) 
-  VALUES ('AAPL','Apple Inc','10000','Computer maker','www.apple.com') 
-  `);
+beforeEach(async () => {
+  await db.query(`INSERT INTO companies (
+    handle,
+    name,
+    num_employees,
+    description,
+    logo_url) 
+    VALUES ('AAPL','Apple Inc','10000','Computer maker','www.apple.com') 
+    `);
 
-await db.query(`INSERT INTO companies (
-  handle,
-  name,
-  num_employees,
-  description,
-  logo_url) 
- VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
- `);
+  await db.query(`INSERT INTO companies (
+    handle,
+    name,
+    num_employees,
+    description,
+    logo_url) 
+    VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
+  `);
 });
 
 afterEach(async () => {
-await db.query("DELETE FROM companies");
+  await db.query("DELETE FROM companies");
 });
 
 afterAll(async () => {
-await db.query("DROP TABLE companies");
-db.end();
+  await db.query("DROP TABLE companies");
+  db.end();
 });
 
-//Unit test to just test the function in Company model
+/***********************************/
+/** TEST: findAll() */
+
 describe("findAll()", () => {
+  // test find all companies
   it("should generate a list of all companies",
-     async function () {
+    async function () {
 
     const response = await Company.findAll();
     expect(response).toEqual(
@@ -73,24 +79,25 @@ describe("findAll()", () => {
     expect(response.length).toBe(2)
   });
 
+  // test find all companies filtered by search query
   it("should generate a list of companies based off 'pple' search parameter",
-     async function () {
-
-    const response = await Company.findAll(0,99000,'pple');
-    expect(response).toEqual(
-      [{
-        "description": "Computer maker",
-        "handle": "AAPL",
-        "logo_url": "www.apple.com",
-        "name": "Apple Inc",
-        "num_employees": 10000,
-      }]
-    );
-    expect(response.length).toBe(1)
+    async function () {
+      const response = await Company.findAll(0,99000,'pple');
+      expect(response).toEqual(
+        [{
+          "description": "Computer maker",
+          "handle": "AAPL",
+          "logo_url": "www.apple.com",
+          "name": "Apple Inc",
+          "num_employees": 10000,
+        }]
+      );
+      expect(response.length).toBe(1)
   });
 
-  it("should generate a list of companies based off empoyees search parameter",
-     async function () {
+  // test all companies filtered by number of employees
+  it("should generate a list of companies based off employees search parameter",
+    async function () {
 
     const response = await Company.findAll(900);
     expect(response).toEqual(
@@ -106,8 +113,12 @@ describe("findAll()", () => {
   });
 });
 
+
+/***********************************/
+/** TEST: updateCompany() */
+
 describe('updateCompany()', () => {
-/* Company.updateCompany(str:handle, obj:data) */
+  // test updating all fields for company
   it("Should return JSON containing the new company data, updating all",
     async function() {
       let handle = 'aapl'
@@ -127,8 +138,9 @@ describe('updateCompany()', () => {
         "logo_url": "www.apple.com/logo.png"
       });
     }
-);
+  );
 
+  // test updating some fields for company
   it("Should return JSON containing the new company data, updating some",
     async function() {
       let handle = 'aapl'
