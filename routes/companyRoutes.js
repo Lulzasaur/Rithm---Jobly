@@ -18,9 +18,15 @@ router.get("/", async function (req, res, next) {
 
 router.post("/", async function (req, res, next) {
   try {
-    let {handle,name,num_employees,description,logo_url} = req.body
-    const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
-    return res.json({ company:companyResp });
+    const result = validate(req.body, companySchema);
+
+    if(!result.valid){
+      return next(result.errors.map(error => error.stack));
+    } else{
+      let {handle,name,num_employees,description,logo_url} = req.body
+      const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
+      return res.json({ company:companyResp });
+    }
   } catch (err) {
     return next(err);
   }
@@ -38,9 +44,15 @@ router.get("/:handle", async function (req, res, next) {
 
 router.patch('/:handle', async function(req, res, next) {
   try {
-    let { handle } = req.params;
-    const companyResp = await Company.updateCompany(handle,req.body)
-    return res.json({ company: companyResp })
+    const result = validate(req.body, editCompanySchema);
+
+    if(!result.valid){
+      return next(result.errors.map(error => error.stack));
+    } else{   
+      let { handle } = req.params;
+      const companyResp = await Company.updateCompany(handle,req.body)
+      return res.json({ company: companyResp })
+    }
   } catch (err) {
     next(err);
   }
