@@ -5,6 +5,9 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+const companyRoutes = require('./routes/companyRoutes');
+app.use('/companies',companyRoutes)
+
 // add logging system
 
 const morgan = require("morgan");
