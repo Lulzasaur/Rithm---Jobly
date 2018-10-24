@@ -3,8 +3,6 @@ const db = require("../../db");
 const request = require("supertest");
 const app = require("../../app");
 
-const Company = require('../../models/companyModels')
-
 // set up table
 beforeAll(async () => {
   await db.query(`CREATE TABLE companies (
