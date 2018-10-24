@@ -1,7 +1,5 @@
-process.env.NODE_ENV='test'
+process.env.NODE_ENV='test';
 const db = require("../../db");
-const request = require("supertest");
-const app = require("../../app");
 
 const Company = require('../../models/companyModels')
 
