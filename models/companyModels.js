@@ -65,7 +65,7 @@ class Company {
         `SELECT handle,name,num_employees,description,logo_url
         FROM companies
         WHERE handle = $1
-        `,[handle])
+        `,[handle.toUpperCase()])
 
       return company.rows[0]
     } catch(e){
