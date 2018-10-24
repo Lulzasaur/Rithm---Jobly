@@ -36,4 +36,14 @@ router.get("/:handle", async function (req, res, next) {
   }
 });
 
+router.patch('/:handle', async function(req, res, next) {
+  try {
+    let { handle } = req.params;
+    console.log('route', handle, req.body);
+
+  } catch (err) {
+    next(err);
+  }
+})
+
 module.exports = router;

@@ -1,4 +1,5 @@
 const db = require("../db");
+const partialUpdate = require('../helpers/partialUpdate');
 
 /** Collection of related methods for companies. */
 
@@ -70,6 +71,18 @@ class Company {
       return company.rows[0]
     } catch(e){
       throw e
+    }
+  }
+
+  static async updateCompany(handle, data) {
+    try {
+      let queryData = partialUpdate('companies', data, 'handle', handle);
+      
+      console.log(queryData);
+ 
+      return queryData;
+    } catch (e) {
+      throw e;
     }
   }
 

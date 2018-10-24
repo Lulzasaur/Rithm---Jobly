@@ -102,6 +102,9 @@ describe("findAll()", () => {
     );
     expect(response.length).toBe(1)
   });
-
 });
+
+describe('updateCompany()', () => {
+
+})
 
