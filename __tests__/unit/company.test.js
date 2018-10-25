@@ -59,13 +59,13 @@ afterAll(async () => {
 
 
 /***********************************/
-/** TEST: findAll() */
+/** TEST: getAll() */
 
-describe("findAll()", () => {
+describe("getAll()", () => {
   it("should return a list of all companies",
     async function () {
 
-    const response = await Company.findAll();
+    const response = await Company.getAll();
     expect(response).toEqual(
       [
         AAPL_DATA,
@@ -83,7 +83,7 @@ describe("findAll()", () => {
 
   it("should return a list of companies filtered by search query 'pple'",
     async function () {
-      const response = await Company.findAll(0,99000,'pple');
+      const response = await Company.getAll(0,99000,'pple');
       expect(response).toEqual(
         [AAPL_DATA]
       );
@@ -93,7 +93,7 @@ describe("findAll()", () => {
   it("should return a list of companies filtered by number of employees",
     async function () {
 
-    const response = await Company.findAll(900);
+    const response = await Company.getAll(900);
     expect(response).toEqual(
       [AAPL_DATA]
     );
@@ -102,7 +102,7 @@ describe("findAll()", () => {
 
   it("Should throw a 400 error when max_employees < min_employees",
     async function() {
-      Company.findAll(1000,20)
+      Company.getAll(1000,20)
       .then(res => {
         console.log("This should have returned an error");
       })
@@ -115,14 +115,14 @@ describe("findAll()", () => {
 
 
 /***********************************/
-/** TEST: getCompany() */
+/** TEST: getOne() */
 
-describe('getCompany()', () => {
+describe('getOne()', () => {
   // test get company, with existing company handle
   it("Should return an object containing the selected company's details",
     async function() {
       let handle = 'aapl';
-      const response = await Company.getCompany(handle);
+      const response = await Company.getOne(handle);
 
       expect(response).toEqual(AAPL_DATA);
     }
@@ -132,7 +132,7 @@ describe('getCompany()', () => {
   it("Should return a 404 error",
     async function() {
       let handle = 'something fake';
-      Company.getCompany(handle)
+      Company.getOne(handle)
       .then(res => {
         expect(res).toEqual(AAPL_DATA);
       })
@@ -145,13 +145,13 @@ describe('getCompany()', () => {
 
 
 /***********************************/
-/** TEST: createCompany() */
+/** TEST: create() */
 
-describe('createCompany()', () => {
+describe('create()', () => {
   it("Should insert a new company in database and return the newly created company details",
     async function() {
 
-      //createCompany(handle,name,numEmployees,description,logoURL)
+      //create(handle,name,numEmployees,description,logoURL)
       let data = {
         "handle": "SKIS",
         "name": "Peak Resorts Inc.",
@@ -162,7 +162,7 @@ describe('createCompany()', () => {
 
       let { handle, name, num_employees, description, logo_url } = data;
 
-      Company.createCompany(handle, name, num_employees, description, logo_url)
+      Company.create(handle, name, num_employees, description, logo_url)
       .then(res => {
         expect(res).toEqual(data);
       })
@@ -183,7 +183,7 @@ describe('createCompany()', () => {
 
       let { handle, name, num_employees, description, logo_url } = data;
 
-      Company.createCompany(handle, name, num_employees, description, logo_url)
+      Company.create(handle, name, num_employees, description, logo_url)
       .then(res => {
         expect(res).toEqual({
           "handle": "DELT",
@@ -196,7 +196,7 @@ describe('createCompany()', () => {
       .catch(err => {
         expect(err.status).toBe(404);
       })
-      //createCompany(handle,name,numEmployees,description,logoURL) 
+      //create(handle,name,numEmployees,description,logoURL) 
     } 
   );
 
@@ -210,7 +210,7 @@ describe('createCompany()', () => {
 
       let { handle, name, num_employees, description, logo_url } = data;
 
-      Company.createCompany(handle, name, num_employees, description, logo_url)
+      Company.create(handle, name, num_employees, description, logo_url)
       .then(res => {
         console.log("This should have thrown an error", res);
       })
@@ -224,9 +224,9 @@ describe('createCompany()', () => {
 
 
 /***********************************/
-/** TEST: updateCompany() */
+/** TEST: update() */
 
-describe('updateCompany()', () => {
+describe('update()', () => {
 
   // test for ALL fields
   it("Should return JSON containing the new company data, updating ALL fields",
@@ -239,7 +239,7 @@ describe('updateCompany()', () => {
         "logo_url": "www.apple.com/logo.png"
       }
 
-      Company.updateCompany(handle, data)
+      Company.update(handle, data)
       .then(res => {
         expect(res).toEqual({
           "handle": "AAPL",
@@ -264,7 +264,7 @@ describe('updateCompany()', () => {
         "num_employees": 40000
       }
 
-      Company.updateCompany(handle, data)
+      Company.update(handle, data)
       .then(res => {
         expect(res).toEqual({
           "handle": "AAPL",
@@ -289,7 +289,7 @@ describe('updateCompany()', () => {
         "num_employees": 40000
       }
 
-      Company.updateCompany(handle, data)
+      Company.update(handle, data)
       .then(res => {
         expect(res).toEqual({
           "handle": "AAPL",
@@ -313,7 +313,7 @@ describe('updateCompany()', () => {
       "_num_employees": 40000
     };
 
-    Company.updateCompany(handle, data)
+    Company.update(handle, data)
     .then(res => {
       console.log('This should throw an error');
     })
@@ -327,15 +327,15 @@ describe('updateCompany()', () => {
 
 
 /***********************************/
-/** TEST: deleteCompany() */
+/** TEST: delete() */
 
-describe('deleteCompany()', () => {
+describe('delete()', () => {
   // test for delete with existing company handle
   it("Should return the handle that was deleted",
     async function() {
       let handle = 'AAPL';
 
-      Company.deleteCompany(handle)
+      Company.delete(handle)
       .then(res => {
         expect(res).toEqual({handle});
       })
@@ -350,7 +350,7 @@ describe('deleteCompany()', () => {
     async function() {
       let handle = 'something fake';
 
-      Company.deleteCompany(handle)
+      Company.delete(handle)
       .then(res => {
         expect(res).toEqual(handle);
       })

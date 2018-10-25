@@ -97,7 +97,7 @@ try {
     return next(result.errors.map(error => error.stack));
   } else{
     let {handle,name,num_employees,description,logo_url} = req.body
-    const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
+    const companyResp = await Company.create(handle,name,num_employees,description,logo_url);
     return res.json({ company:companyResp });
   }
 } catch (err) {

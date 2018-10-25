@@ -9,7 +9,7 @@ class Company {
    *  into the function for name, minEmp and maxEmp
    */
 
-  static async findAll(minEmployees,maxEmployees,search) {        
+  static async getAll(minEmployees,maxEmployees,search) {        
         minEmployees = (minEmployees===undefined) ? 0 : minEmployees;
         maxEmployees = (maxEmployees===undefined) ? 2147483646 : maxEmployees;
 
@@ -46,7 +46,7 @@ class Company {
   }
 
   // "slugs" "Apple Computer" "apple-computer" (slugify)
-  static async createCompany(handle,name,numEmployees,description,logoURL) {
+  static async create(handle,name,numEmployees,description,logoURL) {
     try{
       if (handle === undefined || name === undefined) {
         let err = new Error('Incomplete or invalid data');
@@ -66,7 +66,7 @@ class Company {
     }
   }
 
-  static async getCompany(handle) {
+  static async getOne(handle) {
     try{
       let company = await db.query(
         `SELECT handle,name,num_employees,description,logo_url
@@ -82,7 +82,7 @@ class Company {
     }
   }
 
-  static async updateCompany(handle, data) {
+  static async update(handle, data) {
     try {
       let queryData = partialUpdate('companies', data, 'handle', handle.toUpperCase());
 
@@ -98,7 +98,7 @@ class Company {
     }
   }
 
-  static async deleteCompany(handle) {
+  static async delete(handle) {
     try {
       let company = await db.query(
         `DELETE FROM companies

@@ -9,7 +9,7 @@ router.get("/", async function (req, res, next) {
   try {
     let {minEmployees,maxEmployees,search} = req.query
 
-    const companyResp = await Company.findAll(minEmployees,maxEmployees,search);
+    const companyResp = await Company.getAll(minEmployees,maxEmployees,search);
     return res.json({ company:companyResp });
   } catch (err) {
     return next(err);
@@ -24,7 +24,7 @@ router.post("/", async function (req, res, next) {
       return next(result.errors.map(error => error.stack));
     } else{
       let {handle,name,num_employees,description,logo_url} = req.body
-      const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
+      const companyResp = await Company.create(handle,name,num_employees,description,logo_url);
       return res.json({ company:companyResp });
     }
   } catch (err) {
@@ -35,7 +35,7 @@ router.post("/", async function (req, res, next) {
 router.get("/:handle", async function (req, res, next) {
   try {
     let handle = req.params.handle
-    const companyResp = await Company.getCompany(handle);
+    const companyResp = await Company.getOne(handle);
     return res.json({ company:companyResp });
   } catch (err) {
     return next(err);
@@ -50,7 +50,7 @@ router.patch('/:handle', async function(req, res, next) {
       return next(result.errors.map(error => error.stack));
     } else{   
       let { handle } = req.params;
-      const companyResp = await Company.updateCompany(handle,req.body)
+      const companyResp = await Company.update(handle,req.body)
       return res.json({ company: companyResp })
     }
   } catch (err) {
@@ -61,7 +61,7 @@ router.patch('/:handle', async function(req, res, next) {
 router.delete('/:handle', async function(req, res, next) {
   try {
     let { handle } = req.params;
-    const companyResp = await Company.deleteCompany(handle)
+    const companyResp = await Company.delete(handle)
     return res.json({message:"Company deleted"})
   } catch (err) {
     next(err);
