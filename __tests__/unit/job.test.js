@@ -3,6 +3,21 @@ const db = require("../../db");
 
 const Job = require('../../models/jobModels')
 
+const DPW =  [
+  {
+    "company_handle": "dpw",
+    "title": "janitor"
+  }
+]
+
+const DPWfull = {
+  "company_handle": "dpw", 
+  "equity": 0.9, 
+  "id": 2, 
+  "salary": 900000, 
+  "title": "janitor"
+}
+
 /***********************************/
 /** setup and teardown */
 
@@ -34,7 +49,7 @@ beforeEach(async () => {
     num_employees,
     description,
     logo_url) 
-    VALUES ('AAPL','Apple Inc','10000','Computer maker','www.apple.com') 
+    VALUES ('aapl','Apple Inc','10000','Computer maker','www.apple.com') 
     `);
 
   await db.query(`INSERT INTO companies (
@@ -43,23 +58,27 @@ beforeEach(async () => {
     num_employees,
     description,
     logo_url) 
-    VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
+    VALUES ('dpw','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
   `);
 
   await db.query(`INSERT INTO jobs (
+    id,
     title,
     salary,
     equity,
-    company_handle)
-    VALUES ('CEO','500000','.5','AAPL') 
+    company_handle,
+    date_posted)
+    VALUES ('1','ceo','500000','.5','aapl','2018-10-26T04:16:17.759Z') 
   `);
 
   await db.query(`INSERT INTO jobs (
+    id,
     title,
     salary,
     equity,
-    company_handle)
-    VALUES ('Janitor','900000','0.9','DPW') 
+    company_handle,
+    date_posted)
+    VALUES ('2','janitor','900000','0.9','dpw','2018-10-26T04:16:17.759Z') 
   `);
 });
 
@@ -85,12 +104,12 @@ describe("getAll()", () => {
     expect(response).toEqual(
       [
         {
-          "company_handle": "AAPL", 
-          "title": "CEO"
+          "company_handle": "aapl", 
+          "title": "ceo"
         }, 
         {
-          "company_handle": "DPW",
-          "title": "Janitor"
+          "company_handle": "dpw",
+          "title": "janitor"
         }
       ]
     );
@@ -101,12 +120,7 @@ describe("getAll()", () => {
     async function () {
       const response = await Job.getAll(0,0,'anit');
       expect(response).toEqual(
-        [
-          {
-            "company_handle": "DPW",
-            "title": "Janitor"
-          }
-        ]
+        DPW
       );
       expect(response.length).toBe(1)
   });
@@ -116,12 +130,7 @@ describe("getAll()", () => {
 
     const response = await Job.getAll(600000);
     expect(response).toEqual(
-      [
-        {
-          "company_handle": "DPW",
-          "title": "Janitor"
-        }
-      ]
+      DPW
     );
     expect(response.length).toBe(1)   // DEC desn't have employees
   });
@@ -143,12 +152,7 @@ describe("getAll()", () => {
 
     const response = await Job.getAll(0,0.6);
     expect(response).toEqual(
-      [
-        {
-          "company_handle": "DPW",
-          "title": "Janitor"
-        }
-      ]
+      DPW
     );
     expect(response.length).toBe(1)   // DEC desn't have employees
   });
@@ -170,31 +174,31 @@ describe("getAll()", () => {
 /***********************************/
 /** TEST: getCompany() */
 
-// describe('getCompany()', () => {
-//   // test get company, with existing company handle
-//   it("Should return an object containing the selected company's details",
-//     async function() {
-//       let handle = 'aapl';
-//       const response = await Company.getCompany(handle);
+describe('getOne()', () => {
+  // test get job, with existing job id
+  it("Should return an object containing the selected job's details",
+    async function() {
+      let id = 2;
+      const response = await Job.getOne(id);
 
-//       expect(response).toEqual(AAPL_DATA);
-//     }
-//   );
+      expect(response).toEqual(DPWfull);
+    }
+  );
 
-//   // test get company, with not existing company handle
-//   it("Should return a 404 error",
-//     async function() {
-//       let handle = 'something fake';
-//       Company.getCompany(handle)
-//       .then(res => {
-//         expect(res).toEqual(AAPL_DATA);
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       }); 
-//     }
-//   );
-// });
+  // test get job, with not existing job id
+  it("Should return a 404 error",
+    async function() {
+      let id = 192;
+      Job.getOne(id)
+      .then(res => {
+        expect(res).toEqual();
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      }); 
+    }
+  );
+});
 
 
 // /***********************************/
