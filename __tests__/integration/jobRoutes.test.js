@@ -106,21 +106,21 @@ describe("GET /", () => {
 	});
 });
 
-// /****************/
-// /** GET a job */
+/****************/
+/** GET a job */
 
-// describe("GET /jobs", () => {
+describe("GET /jobs", () => {
 
-// 	test("Should respond with object with array of jobs", async() => {
-// 		let jobID = 1;
-// 		const response = await request(app).get(`/jobs/${jobID}`);
+	test("Should respond with object with array of jobs", async() => {
+		let jobID = 1;
+		const response = await request(app).get(`/jobs/${jobID}`);
 
-// 		expect(response.status).toEqual(200);
-// 		expect(response.body.job).toEqual(2);
-// 		expect(response.body.job.company_handle).toEqual('aapl');
-// 		expect(response.body.job.title).toEqual('ceo');
-// 	});
-// });
+		expect(response.status).toEqual(200);
+		expect(response.body.job).toEqual(2);
+		expect(response.body.job.company_handle).toEqual('AAPL');
+		expect(response.body.job.title).toEqual('CEO');
+	});
+});
 
 // /*******************/
 // /** POST a new job */
