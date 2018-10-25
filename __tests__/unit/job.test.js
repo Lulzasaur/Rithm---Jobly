@@ -38,7 +38,7 @@ beforeAll(async () => {
     equity FLOAT NOT NULL CHECK (equity<1), 
     company_handle TEXT REFERENCES companies(handle),
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
-  );`)
+  )`)
 });
 
 // seed with some data
@@ -50,7 +50,7 @@ beforeEach(async () => {
     description,
     logo_url) 
     VALUES ('aapl','Apple Inc','10000','Computer maker','www.apple.com') 
-    `);
+  `);
 
   await db.query(`INSERT INTO companies (
     handle,
@@ -180,6 +180,7 @@ describe('getOne()', () => {
     async function() {
       let id = 3;
       const response = await Job.getOne(id);
+
       expect(response).toEqual(DPWfull);
     }
   );
@@ -284,25 +285,74 @@ describe('create()', () => {
 describe('update()', () => {
 
   // test for ALL fields
-  it("Should return JSON containing the new company data, updating ALL fields",
+  it("Should return JSON containing the new job data, updating ALL fields",
     async function() {
-      let handle = 'aapl'
+      let id = 3
       let data = {
-        "name": "Apple Inc.",
-        "num_employees": 25000,
-        "description": "Electronics and Computing company",
-        "logo_url": "www.apple.com/logo.png"
+        "company_handle": "aapl", 
+        "equity": 0.2, 
+        "salary": 400, 
+        "title": "marketing janitor",
+        "date_posted":'2018-10-26T11:16:17.759Z'
       }
 
-      Company.updateCompany(handle, data)
+      Job.update(id, data)
       .then(res => {
-        expect(res).toEqual({
-          "handle": "AAPL",
-          "name": "Apple Inc.",
-          "num_employees": 25000,
-          "description": "Electronics and Computing company",
-          "logo_url": "www.apple.com/logo.png"
-        })
+        expect(res.company_handle).toEqual(data.company_handle)
+        expect(res.equity).toEqual(data.equity)
+        expect(res.salary).toEqual(data.salary)
+        expect(res.title).toEqual(data.title)
+      })
+    }
+  );
+
+  // test SOME fields for job
+  it("Should return JSON containing the new job data, updating SOME fields",
+    async function() {
+      let id = 3
+      let data = {
+        "company_handle": "aapl"
+      }
+
+      Job.update(id, data)
+      .then(res => {
+        expect(res.id).toEqual(id)
+        expect(res.company_handle).toEqual(data.company_handle)
+      })
+    }
+  );
+
+  // test for not existing job id
+  it("Should return 404 error",
+    async function() {
+      let id = 9999
+      let data = {
+        "company_handle": "aapl"
+      }
+
+      Job.update(id, data)
+      .then(res => {
+        expect(res).toEqual('there should be an error')
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      });
+    }
+  );
+});
+
+// /***********************************/
+// /** TEST: deleteCompany() */
+
+describe('deleteJob()', () => {
+  // test for delete with existing job id
+  it("Should return the id that was deleted",
+    async function() {
+      let id = 2;
+
+      Job.delete(id)
+      .then(res => {
+        expect(res).toEqual({id});
       })
       .catch(err => {
         expect(err.status).toBe(404);
@@ -310,108 +360,18 @@ describe('update()', () => {
     }
   );
 
-//   // test SOME fields for company
-//   it("Should return JSON containing the new company data, updating SOME fields",
-//     async function() {
-//       let handle = 'aapl'
-//       let data = {
-//         "name": "Apple Corporation",
-//         "num_employees": 40000
-//       }
+  // test for not existing company handle
+  it("Should throw a 404 error",
+    async function() {
+      let id = 8347;
 
-//       Company.updateCompany(handle, data)
-//       .then(res => {
-//         expect(res).toEqual({
-//           "handle": "AAPL",
-//           "name": "Apple Corporation",
-//           "num_employees": 40000,
-//           "description": "Computer maker",
-//           "logo_url": "www.apple.com"
-//         })
-//       })
-//       .catch(err => {
-//         expect(err.status).toEqual(404);
-//       });
-//     }
-//   );
-
-//   // test for not existing company handle
-//   it("Should return 404 error",
-//     async function() {
-//       let handle = 'something fake'
-//       let data = {
-//         "name": "Apple Corporation",
-//         "num_employees": 40000
-//       }
-
-//       Company.updateCompany(handle, data)
-//       .then(res => {
-//         expect(res).toEqual({
-//           "handle": "AAPL",
-//           "name": "Apple Corporation",
-//           "num_employees": 40000,
-//           "description": "Computer maker",
-//           "logo_url": "www.apple.com"
-//         })
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
-
-//   it("Should throw a 404 error",
-//   async function() {
-//     let handle = 'aapl';
-//     let data = {
-//       "_name": "Apple Corporation",
-//       "_num_employees": 40000
-//     };
-
-//     Company.updateCompany(handle, data)
-//     .then(res => {
-//       console.log('This should throw an error');
-//     })
-//     .catch(err => {
-//       expect(err.status).toEqual(400);
-//     })
-//   })
-// });
-
-
-
-
-// /***********************************/
-// /** TEST: deleteCompany() */
-
-// describe('deleteCompany()', () => {
-//   // test for delete with existing company handle
-//   it("Should return the handle that was deleted",
-//     async function() {
-//       let handle = 'AAPL';
-
-//       Company.deleteCompany(handle)
-//       .then(res => {
-//         expect(res).toEqual({handle});
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
-
-//   // test for not existing company handle
-//   it("Should throw a 404 error",
-//     async function() {
-//       let handle = 'something fake';
-
-//       Company.deleteCompany(handle)
-//       .then(res => {
-//         expect(res).toEqual(handle);
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
-// });
+      Job.delete(id)
+      .then(res => {
+        expect(res).toEqual(id);
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      });
+    }
+  );
+});
