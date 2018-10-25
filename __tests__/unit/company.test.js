@@ -62,7 +62,6 @@ afterAll(async () => {
 /** TEST: findAll() */
 
 describe("findAll()", () => {
-  // test find all companies
   it("should return a list of all companies",
     async function () {
 
@@ -82,7 +81,6 @@ describe("findAll()", () => {
     expect(response.length).toBe(2)
   });
 
-  // test find all companies filtered by search query
   it("should return a list of companies filtered by search query 'pple'",
     async function () {
       const response = await Company.findAll(0,99000,'pple');
@@ -92,7 +90,6 @@ describe("findAll()", () => {
       expect(response.length).toBe(1)
   });
 
-  // test all companies filtered by number of employees
   it("should return a list of companies filtered by number of employees",
     async function () {
 
@@ -102,6 +99,18 @@ describe("findAll()", () => {
     );
     expect(response.length).toBe(1)   // DEC desn't have employees
   });
+
+  it("Should throw a 400 error when max_employees < min_employees",
+    async function() {
+      Company.findAll(1000,20)
+      .then(res => {
+        console.log("This should have returned an error");
+      })
+      .catch(err => {
+        expect(err.status).toEqual(400);
+      })
+    }  
+  )
 });
 
 
@@ -139,7 +148,6 @@ describe('getCompany()', () => {
 /** TEST: createCompany() */
 
 describe('createCompany()', () => {
-  // test for create with valid data
   it("Should insert a new company in database and return the newly created company details",
     async function() {
 
@@ -193,6 +201,24 @@ describe('createCompany()', () => {
   );
 
   // test for create with invalid data
+  it("Should throw 400 because of invalid data",
+    async function() {
+      let data = {
+        "handle": "AAPL",
+        "invalid": "This field does not hav a valid key"
+      };
+
+      let { handle, name, num_employees, description, logo_url } = data;
+
+      Company.createCompany(handle, name, num_employees, description, logo_url)
+      .then(res => {
+        console.log("This should have thrown an error");
+      })
+      .catch(err => {
+        expect(err.status).toEqual(400);
+      })
+    }
+  )
 })
 
 
