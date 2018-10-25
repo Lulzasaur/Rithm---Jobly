@@ -54,7 +54,7 @@ class Company {
         RETURNING handle,name,num_employees,description,logo_url
         `,[handle,name,numEmployees,description,logoURL])
 
-      Company.findHandle(company.rows[0])
+      Company.errIfNonexistent(company.rows[0])
 
       return company.rows[0]
     } catch(e){
@@ -70,7 +70,7 @@ class Company {
         WHERE handle = $1
         `,[handle.toUpperCase()])
       
-      Company.findHandle(company.rows[0])
+      Company.errIfNonexistent(company.rows[0])
 
       return company.rows[0]
     } catch(e){
@@ -86,7 +86,7 @@ class Company {
         queryData.query,queryData.values
       )
 
-      Company.findHandle(company.rows[0])
+      Company.errIfNonexistent(company.rows[0])
  
       return company.rows[0];
     } catch (e) {
@@ -103,7 +103,7 @@ class Company {
         `,[handle.toUpperCase()]
       );
 
-      Company.findHandle(company.rows[0])
+      Company.errIfNonexistent(company.rows[0])
 
       return company.rows[0]
     } catch (e) {
@@ -112,7 +112,7 @@ class Company {
   }
 
   static errIfNonexistent(company){
-    if(!rows){
+    if(!company){
       let err = new Error('No such company')
       err.status = 404;
       throw err
@@ -120,6 +120,5 @@ class Company {
   }
 
 }
-
 
 module.exports = Company;

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1540487959604" clover="3.2.0">
+  <project timestamp="1540487959604" name="All files">
+    <metrics statements="122" coveredstatements="109" conditionals="26" coveredconditionals="21" methods="16" coveredmethods="15" elements="164" coveredelements="145" complexity="0" loc="122" ncloc="122" packages="4" files="6" classes="6">
+      <package name="express-jobly">
+        <metrics statements="27" coveredstatements="23" conditionals="10" coveredconditionals="7" methods="2" coveredmethods="1"/>
+        <file name="app.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/app.js">
+          <metrics statements="15" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="1"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="0" type="stmt"/>
+          <line num="21" count="0" type="stmt"/>
+          <line num="24" count="0" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="30" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="32" count="3" type="stmt"/>
+          <line num="39" count="1" type="stmt"/>
+        </file>
+        <file name="config.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/config.js">
+          <metrics statements="7" coveredstatements="6" conditionals="8" coveredconditionals="5" methods="0" coveredmethods="0"/>
+          <line num="4" count="2" type="stmt"/>
+          <line num="6" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="8" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="18" count="2" type="cond" truecount="1" falsecount="1"/>
+          <line num="19" count="2" type="stmt"/>
+          <line num="21" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="25" count="2" type="stmt"/>
+        </file>
+        <file name="db.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/db.js">
+          <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="4" count="2" type="stmt"/>
+          <line num="5" count="2" type="stmt"/>
+          <line num="7" count="2" type="stmt"/>
+          <line num="11" count="2" type="stmt"/>
+          <line num="14" count="2" type="stmt"/>
+        </file>
+      </package>
+      <package name="express-jobly.helpers">
+        <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <file name="partialUpdate.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/helpers/partialUpdate.js">
+          <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="18" count="5" type="stmt"/>
+          <line num="19" count="5" type="stmt"/>
+          <line num="22" count="5" type="stmt"/>
+          <line num="23" count="15" type="cond" truecount="1" falsecount="1"/>
+          <line num="24" count="0" type="stmt"/>
+          <line num="28" count="5" type="stmt"/>
+          <line num="29" count="15" type="stmt"/>
+          <line num="30" count="15" type="stmt"/>
+          <line num="34" count="5" type="stmt"/>
+          <line num="35" count="5" type="stmt"/>
+          <line num="37" count="5" type="stmt"/>
+          <line num="38" count="5" type="stmt"/>
+          <line num="40" count="5" type="stmt"/>
+          <line num="44" count="3" type="stmt"/>
+        </file>
+      </package>
+      <package name="express-jobly.models">
+        <metrics statements="38" coveredstatements="34" conditionals="10" coveredconditionals="9" methods="6" coveredmethods="6"/>
+        <file name="companyModels.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/models/companyModels.js">
+          <metrics statements="38" coveredstatements="34" conditionals="10" coveredconditionals="9" methods="6" coveredmethods="6"/>
+          <line num="1" count="2" type="stmt"/>
+          <line num="2" count="2" type="stmt"/>
+          <line num="13" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="14" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="4" type="cond" truecount="1" falsecount="1"/>
+          <line num="17" count="0" type="stmt"/>
+          <line num="18" count="0" type="stmt"/>
+          <line num="19" count="0" type="stmt"/>
+          <line num="27" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="36" count="3" type="stmt"/>
+          <line num="44" count="4" type="stmt"/>
+          <line num="50" count="3" type="stmt"/>
+          <line num="51" count="3" type="stmt"/>
+          <line num="57" count="3" type="stmt"/>
+          <line num="59" count="3" type="stmt"/>
+          <line num="61" count="0" type="stmt"/>
+          <line num="66" count="3" type="stmt"/>
+          <line num="67" count="3" type="stmt"/>
+          <line num="73" count="3" type="stmt"/>
+          <line num="75" count="2" type="stmt"/>
+          <line num="77" count="1" type="stmt"/>
+          <line num="82" count="4" type="stmt"/>
+          <line num="83" count="4" type="stmt"/>
+          <line num="85" count="4" type="stmt"/>
+          <line num="89" count="4" type="stmt"/>
+          <line num="91" count="3" type="stmt"/>
+          <line num="93" count="1" type="stmt"/>
+          <line num="98" count="4" type="stmt"/>
+          <line num="99" count="4" type="stmt"/>
+          <line num="106" count="4" type="stmt"/>
+          <line num="108" count="2" type="stmt"/>
+          <line num="110" count="2" type="stmt"/>
+          <line num="115" count="14" type="cond" truecount="2" falsecount="0"/>
+          <line num="116" count="4" type="stmt"/>
+          <line num="117" count="4" type="stmt"/>
+          <line num="118" count="4" type="stmt"/>
+          <line num="124" count="2" type="stmt"/>
+        </file>
+      </package>
+      <package name="express-jobly.routes">
+        <metrics statements="43" coveredstatements="39" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="7"/>
+        <file name="companyRoutes.js" path="/Users/lulzasaur/Desktop/Rithm/express-jobly/routes/companyRoutes.js">
+          <metrics statements="43" coveredstatements="39" conditionals="4" coveredconditionals="4" methods="7" coveredmethods="7"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="15" count="0" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="2" type="stmt"/>
+          <line num="21" count="2" type="stmt"/>
+          <line num="23" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="31" count="0" type="stmt"/>
+          <line num="35" count="1" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="38" count="1" type="stmt"/>
+          <line num="39" count="1" type="stmt"/>
+          <line num="41" count="0" type="stmt"/>
+          <line num="45" count="1" type="stmt"/>
+          <line num="46" count="2" type="stmt"/>
+          <line num="47" count="2" type="stmt"/>
+          <line num="49" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="50" count="1" type="stmt"/>
+          <line num="52" count="1" type="stmt"/>
+          <line num="53" count="1" type="stmt"/>
+          <line num="54" count="1" type="stmt"/>
+          <line num="57" count="0" type="stmt"/>
+          <line num="61" count="1" type="stmt"/>
+          <line num="62" count="2" type="stmt"/>
+          <line num="63" count="2" type="stmt"/>
+          <line num="64" count="2" type="stmt"/>
+          <line num="65" count="1" type="stmt"/>
+          <line num="67" count="1" type="stmt"/>
+          <line num="71" count="1" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>

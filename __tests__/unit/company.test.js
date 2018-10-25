@@ -240,7 +240,7 @@ describe('updateCompany()', () => {
 
       Company.updateCompany(handle, data)
       .then(res => {
-        expect(res).toBe({
+        expect(res).toEqual({
           "handle": "AAPL",
           "name": "Apple Corporation",
           "num_employees": 40000,
@@ -249,7 +249,7 @@ describe('updateCompany()', () => {
         })
       })
       .catch(err => {
-        expect(err.status).toBe(404);
+        expect(err.status).toEqual(404);
       });
     }
   );

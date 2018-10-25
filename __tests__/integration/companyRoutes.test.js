@@ -180,7 +180,7 @@ describe("DELETE /", () => {
 
   test("It should return invalid for unidentified company", async () => {
     const response = await request(app).delete("/companies/SADFSDF");
-    expect(response.body).toEqual({"error": {"status": 404}, "message": "Not Found"})
+    expect(response.body).toEqual({"error": {"status": 404}, "message": "No such company"})
     expect(response.statusCode).toBe(404);
   });
 });
