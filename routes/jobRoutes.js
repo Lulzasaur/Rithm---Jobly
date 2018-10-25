@@ -26,18 +26,31 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+router.post('/', async function(req, res, next) {
+  try {
+    let result = validate(req.body, jobSchema);
+
+    if (!result.valid)
+      return next(result.errors.map(e => e.stack));
+
+    let { title, salary, equity, company_handle } = req.body;
+    const job = await Job.create(title, salary, equity, company_handle);
+
+    return res.json({job});
+  } catch(err) {
+    next(err);
+  }
+});
 
 router.get('/:id', async function(req, res, next) {
   try {
     let { id } = req.params;
-    console.log('job',id);
     const job = await Job.getOne(id);
-    
     return res.json({job});
   } catch (err) {
     next(err);
   }
-})
+});
 
 module.exports = router;
 
