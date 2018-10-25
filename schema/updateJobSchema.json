@@ -4,13 +4,11 @@
     "$id": "http://example.com/root.json",
     "type": "object",
     "title": "The Root Schema",
-    "required": [
-      "id"
-    ],
+    "required": [],
     "properties": {
       "id": {
         "$id": "#/properties/id",
-        "type": "string",
+        "type": "integer",
         "title": "The Id Schema",
         "default": "",
         "examples": [
@@ -30,7 +28,7 @@
       },
       "salary": {
         "$id": "#/properties/salary",
-        "type": "string",
+        "type": "number",
         "title": "The Salary Schema",
         "default": "",
         "examples": [
@@ -40,7 +38,7 @@
       },
       "equity": {
         "$id": "#/properties/equity",
-        "type": "string",
+        "type": "number",
         "title": "The Equity Schema",
         "default": "",
         "examples": [
