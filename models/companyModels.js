@@ -48,13 +48,17 @@ class Company {
   // "slugs" "Apple Computer" "apple-computer" (slugify)
   static async createCompany(handle,name,numEmployees,description,logoURL) {
     try{
+      if (handle === undefined || name === undefined) {
+        let err = new Error('Incomplete or invalid data');
+        err.status = 400;
+        throw err;
+      }
+
       let company = await db.query(
         `INSERT INTO companies (handle,name,num_employees,description,logo_url)
         VALUES ($1,$2,$3,$4,$5)
         RETURNING handle,name,num_employees,description,logo_url
         `,[handle,name,numEmployees,description,logoURL])
-
-      Company.errIfNonexistent(company.rows[0])
 
       return company.rows[0]
     } catch(e){
