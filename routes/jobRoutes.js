@@ -77,7 +77,7 @@ router.delete('/:id', async function(req, res, next) {
   try{
     let { id } = req.params;
 
-    let result = await Job.delete(id);
+    await Job.delete(id);
 
     return res.json({message: 'Job deleted'})
   } catch (err) {

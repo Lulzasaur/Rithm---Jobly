@@ -119,13 +119,23 @@ describe("GET /jobs", () => {
 		expect(response.body.job.id).toEqual(jobID);
 		expect(response.body.job.company_handle).toEqual(AAPL_JOB.company_handle);
 		expect(response.body.job.title).toEqual(AAPL_JOB.title);
-	});
+  });
+  
+
+  test("Should respond with 404 Error: No such job", async() => {
+    let jobID = 11111;
+    const response = await request(app).get(`/jobs/${jobID}`);
+
+    expect(response.status).toEqual(404);
+    expect(response.body.message).toEqual('No such job');
+  });
 });
 
 /*******************/
 /** POST a new job */
 
 describe('POST /jobs', () => {
+
 	test("Should respond with the new job fields", async() => {
 		let data = {
 			title: "cfo",
@@ -141,7 +151,19 @@ describe('POST /jobs', () => {
 		expect(response.body.job.salary).toEqual(data.salary);
 		expect(response.body.job.equity).toEqual(data.equity);
 		expect(response.body.job.company_handle).toEqual(data.company_handle);
-	})
+  });
+  
+  test("Should respond with error 500 error", async() => {
+    let data = {
+      title: 4,
+      salary: "no",
+      equality: "of course"
+    }
+
+    const response = await request(app).post('/jobs').send(data);
+
+    expect(response.status).toEqual(500);
+  });
 });
 
 /*******************/
@@ -160,7 +182,20 @@ describe('PATCH /jobs/:id', () => {
 		expect(response.status).toEqual(200);
 		expect(response.body.job.title).toEqual(data.title);
 		expect(response.body.job.salary).toEqual(data.salary);
-	});
+  });
+
+
+  test("Should respond with 500 error", async() => {
+		let id = 2;
+		let data = {
+			titles: 'Software engineer',
+			saladry: 90000
+		};
+
+    const response = await request(app).patch(`/jobs/${id}`).send(data);
+    
+		expect(response.status).toEqual(500);
+  });
 });
 
 /*******************/
