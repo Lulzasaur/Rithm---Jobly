@@ -53,8 +53,8 @@ class Job {
         VALUES ($1,$2,$3,$4)
         RETURNING title,salary,equity,company_handle
         `,[title.toLowerCase(),salary,equity,company_handle.toLowerCase()])
-
-      return job.rows[0]
+      
+        return job.rows[0]
     } catch(e){
       throw e
     }

@@ -13,7 +13,7 @@ const DPW =  [
 const DPWfull = {
   "company_handle": "dpw", 
   "equity": 0.9, 
-  "id": 2, 
+  "id": 3, 
   "salary": 900000, 
   "title": "janitor"
 }
@@ -68,7 +68,7 @@ beforeEach(async () => {
     equity,
     company_handle,
     date_posted)
-    VALUES ('1','ceo','500000','.5','aapl','2018-10-26T04:16:17.759Z') 
+    VALUES (2,'ceo','500000','.5','aapl','2018-10-26T04:16:17.759Z') 
   `);
 
   await db.query(`INSERT INTO jobs (
@@ -78,7 +78,7 @@ beforeEach(async () => {
     equity,
     company_handle,
     date_posted)
-    VALUES ('2','janitor','900000','0.9','dpw','2018-10-26T04:16:17.759Z') 
+    VALUES (3,'janitor','900000','0.9','dpw','2018-10-26T04:16:17.759Z') 
   `);
 });
 
@@ -178,9 +178,8 @@ describe('getOne()', () => {
   // test get job, with existing job id
   it("Should return an object containing the selected job's details",
     async function() {
-      let id = 2;
+      let id = 3;
       const response = await Job.getOne(id);
-
       expect(response).toEqual(DPWfull);
     }
   );
@@ -201,61 +200,65 @@ describe('getOne()', () => {
 });
 
 
-// /***********************************/
-// /** TEST: createCompany() */
+/***********************************/
+/** TEST: createCompany() */
 
-// describe('createCompany()', () => {
-//   it("Should insert a new company in database and return the newly created company details",
-//     async function() {
+describe('create()', () => {
+  it("Should insert a new job in database and return the newly created job details",
+    async function() {
 
-//       //createCompany(handle,name,numEmployees,description,logoURL)
-//       let data = {
-//         "handle": "SKIS",
-//         "name": "Peak Resorts Inc.",
-//         "num_employees": 650,
-//         "description": "Snowsports Resort Corporation",
-//         "logo_url": "https://www.newenglandskihistory.com/skiareamanagement/logopeakresorts.jpg"
-//       };
+        //create(title, salary, equity, company_handle)
+        let data = {
+          title: "BROGRAMMER",
+          salary: 40,
+          equity: .2,
+          company_handle: "aapl"
+        };
 
-//       let { handle, name, num_employees, description, logo_url } = data;
+        let { title, salary, equity, company_handle } = data;
+     
+        Job.create(title, salary, equity,company_handle)
+        .then(res => {
+          expect(res).toEqual({ 
+            title: 'brogrammer',
+            salary: 40,
+            equity: 0.2,
+            company_handle: 'aapl' 
+          });
+        })
+        .catch(err => {
+          expect(err.status).toBe(404);
+        })
+      } 
+    );
+  });
 
-//       Company.createCompany(handle, name, num_employees, description, logo_url)
-//       .then(res => {
-//         expect(res).toEqual(data);
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       })
-//     } 
-//   );
+  // test for create with missing non-required data
+  it("Should insert a new company with missing values as null",
+    async function() {
+      let data = {
+        "handle": "DELT",
+        "name": "Delta Technology Holdings Ltd",
+      };
 
+      let { handle, name, num_employees, description, logo_url } = data;
 
-//   // test for create with missing non-required data
-//   it("Should insert a new company with missing values as null",
-//     async function() {
-//       let data = {
-//         "handle": "DELT",
-//         "name": "Delta Technology Holdings Ltd",
-//       };
-
-//       let { handle, name, num_employees, description, logo_url } = data;
-
-//       Company.createCompany(handle, name, num_employees, description, logo_url)
-//       .then(res => {
-//         expect(res).toEqual({
-//           "handle": "DELT",
-//           "name": "Delta Technology Holdings Ltd",
-//           "num_employees": null,
-//           "description": null,
-//           "logo_url": null
-//         });
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       })
-//       //createCompany(handle,name,numEmployees,description,logoURL) 
-//     } 
-//   );
+      Company.createCompany(handle, name, num_employees, description, logo_url)
+      .then(res => {
+        expect(res).toEqual({
+          "handle": "DELT",
+          "name": "Delta Technology Holdings Ltd",
+          "num_employees": null,
+          "description": null,
+          "logo_url": null
+        });
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      })
+      //createCompany(handle,name,numEmployees,description,logoURL) 
+    } 
+  );
 
 //   // test for create with invalid data
 //   it("Should throw 400 because of invalid data",
@@ -417,4 +420,3 @@ describe('getOne()', () => {
 //     }
 //   );
 // });
-
