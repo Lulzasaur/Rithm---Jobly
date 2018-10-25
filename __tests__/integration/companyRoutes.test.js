@@ -253,3 +253,17 @@ describe("DELETE /", () => {
     expect(response.statusCode).toBe(404);
   });
 });
+
+//test for unhandled route
+describe("/asdfasd", () => {
+  test("It should throw an error", async () => {
+    const response = await request(app).get("/asdfasfd");
+    expect(response.body).toEqual(
+      {
+        "error": {"status": 404}, 
+        "message": "Not Found"
+      }
+  );
+    expect(response.statusCode).toBe(404);
+  });
+});
