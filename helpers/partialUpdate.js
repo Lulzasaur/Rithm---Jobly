@@ -25,6 +25,12 @@ function sqlForPartialUpdate(table, items, key, id) {
     }
   }
 
+  if (Object.keys(items).length < 1) {
+    let err = new Error('Must have 1 or more valid items; keys cannot start with an underscore _');
+    err.status = 400;
+    throw err;
+  }
+
   for (let column in items) {
     columns.push(`${column}=$${idx}`);
     idx += 1;
