@@ -18,10 +18,9 @@ router.get("/", async function (req, res, next) {
   try {
     let {minSalary, minEquity, search} = req.body;
 
-    const results = await Job.getAll(minSalary, minEquity, search);
-    const jobs = results.rows;
+    const jobs = await Job.getAll(minSalary, minEquity, search);
 
-    return res.json(jobs);
+    return res.json({jobs});
   } catch (err) {
     next(err);
   }
