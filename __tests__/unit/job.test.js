@@ -231,89 +231,84 @@ describe('create()', () => {
         })
       } 
     );
-  });
 
   // test for create with missing non-required data
-  it("Should insert a new company with missing values as null",
+  it("Should insert a new job with missing values as null",
     async function() {
       let data = {
-        "handle": "DELT",
-        "name": "Delta Technology Holdings Ltd",
+        title: 'brogrammer',
+        salary: 40,
+        equity: 0.2,
+      };
+
+      let { title,salary } = data;
+
+      Job.create(title,salary)
+      .then(res => {
+        expect(res).toEqual({
+          title: 'brogrammer',
+          salary: 40,
+          equity: 0.2,
+        });
+      })
+      .catch(err => {
+        expect(err.status).toBe(400);
+      })
+    } 
+  );
+
+  // test for create with invalid data
+  it("Should throw 400 because of TOTALLY invalid data",
+    async function() {
+      let data = {
+        "handle": "AAPL",
+        "invalid": "This field does not hav a valid key"
       };
 
       let { handle, name, num_employees, description, logo_url } = data;
 
-      Company.createCompany(handle, name, num_employees, description, logo_url)
+      Job.create(handle, name, num_employees, description, logo_url)
+      .then(res => {
+        console.log("This should have thrown an error", res);
+      })
+      .catch(err => {
+        expect(err.status).toEqual(400);
+      })
+    }
+  )
+})
+
+/***********************************/
+/** TEST: updateCompany() */
+
+describe('update()', () => {
+
+  // test for ALL fields
+  it("Should return JSON containing the new company data, updating ALL fields",
+    async function() {
+      let handle = 'aapl'
+      let data = {
+        "name": "Apple Inc.",
+        "num_employees": 25000,
+        "description": "Electronics and Computing company",
+        "logo_url": "www.apple.com/logo.png"
+      }
+
+      Company.updateCompany(handle, data)
       .then(res => {
         expect(res).toEqual({
-          "handle": "DELT",
-          "name": "Delta Technology Holdings Ltd",
-          "num_employees": null,
-          "description": null,
-          "logo_url": null
-        });
+          "handle": "AAPL",
+          "name": "Apple Inc.",
+          "num_employees": 25000,
+          "description": "Electronics and Computing company",
+          "logo_url": "www.apple.com/logo.png"
+        })
       })
       .catch(err => {
         expect(err.status).toBe(404);
-      })
-      //createCompany(handle,name,numEmployees,description,logoURL) 
-    } 
+      });
+    }
   );
-
-//   // test for create with invalid data
-//   it("Should throw 400 because of invalid data",
-//     async function() {
-//       let data = {
-//         "handle": "AAPL",
-//         "invalid": "This field does not hav a valid key"
-//       };
-
-//       let { handle, name, num_employees, description, logo_url } = data;
-
-//       Company.createCompany(handle, name, num_employees, description, logo_url)
-//       .then(res => {
-//         console.log("This should have thrown an error", res);
-//       })
-//       .catch(err => {
-//         expect(err.status).toEqual(400);
-//       })
-//     }
-//   )
-// })
-
-
-
-// /***********************************/
-// /** TEST: updateCompany() */
-
-// describe('updateCompany()', () => {
-
-//   // test for ALL fields
-//   it("Should return JSON containing the new company data, updating ALL fields",
-//     async function() {
-//       let handle = 'aapl'
-//       let data = {
-//         "name": "Apple Inc.",
-//         "num_employees": 25000,
-//         "description": "Electronics and Computing company",
-//         "logo_url": "www.apple.com/logo.png"
-//       }
-
-//       Company.updateCompany(handle, data)
-//       .then(res => {
-//         expect(res).toEqual({
-//           "handle": "AAPL",
-//           "name": "Apple Inc.",
-//           "num_employees": 25000,
-//           "description": "Electronics and Computing company",
-//           "logo_url": "www.apple.com/logo.png"
-//         })
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
 
 //   // test SOME fields for company
 //   it("Should return JSON containing the new company data, updating SOME fields",
