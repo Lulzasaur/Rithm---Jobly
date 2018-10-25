@@ -52,7 +52,7 @@ class Job {
         `INSERT INTO jobs (title,salary,equity,company_handle)
         VALUES ($1,$2,$3,$4)
         RETURNING title,salary,equity,company_handle
-        `,[title,salary,equity,company_handle])
+        `,[title.toLowerCase(),salary,equity,company_handle.toLowerCase()])
 
       return job.rows[0]
     } catch(e){
