@@ -10,94 +10,100 @@ class Job {
    */
 
   static async getAll(minSalary,minEquity,search) {        
-        minSalary = (minSalary===undefined) ? 0 : minSalary;
-        minEquity = (minEquity===undefined) ? 0 : minEquity;
+    minSalary = (minSalary===undefined) ? 0 : minSalary;
+    minEquity = (minEquity===undefined) ? 0 : minEquity;
 
-        if(minSalary <0 || minEquity <0 || minEquity > 1){
-          let err = new Error('Invalid parameters');
-          err.status = 400;
-          throw err;
-        }
+    let sqlQuery =`SELECT title,company_handle
+    FROM jobs
+    WHERE salary > $1
+    AND equity > $2`,
+        sqlSearchLine =``,
+        sqlParams= [minSalary,minEquity];
 
-        let salaryRes;
+    if(minSalary <0 || minEquity <0 || minEquity > 1){
+      let err = new Error('Invalid parameters');
+      err.status = 400;
+      throw err;
+    }
 
-        // let selectPrefix = "SELECT handle,name,num_employees,description,logo_url"
+    if(search){
+      sqlSearchLine = `AND title ILIKE $3`
+      sqlParams.push(`%${search}%`)
+      sqlQuery+=sqlSearchLine
+    }
 
-        companyRes = await db.query(
-              `SELECT id,title,salary,equity,company_handle,date_posted
-                  FROM jobs
-                  WHERE salary > $1
-                  AND minEquity > $1
-              `,[minSalary,miEquity])
+    let jobRes = await db.query(
+          sqlQuery,sqlParams)
 
-        return companyRes.rows;
+    return jobRes.rows;
   }
 
-  // "slugs" "Apple Computer" "apple-computer" (slugify)
-  static async createCompany(handle,name,numEmployees,description,logoURL) {
+  static async create(title,salary,equity,company_handle) {
     try{
-      if (handle === undefined || name === undefined) {
+
+      //check if data is complete. However, should also be handled in schema
+      if (title === undefined || salary === undefined || equity === undefined || company_handle === undefined) {
         let err = new Error('Incomplete or invalid data');
         err.status = 400;
         throw err;
       }
 
-      let company = await db.query(
-        `INSERT INTO companies (handle,name,num_employees,description,logo_url)
-        VALUES ($1,$2,$3,$4,$5)
-        RETURNING handle,name,num_employees,description,logo_url
-        `,[handle,name,numEmployees,description,logoURL])
+      let job = await db.query(
+        `INSERT INTO jobs (title,salary,equity,company_handle)
+        VALUES ($1,$2,$3,$4)
+        RETURNING title,salary,equity,company_handle
+        `,[title,salary,equity,company_handle])
 
-      return company.rows[0]
+      return job.rows[0]
     } catch(e){
       throw e
     }
   }
 
-  static async getCompany(handle) {
+  static async getOne(id) {
     try{
-      let company = await db.query(
-        `SELECT handle,name,num_employees,description,logo_url
+      let job = await db.query(
+        `SELECT id,title,salary,equity,company_handle,date_posted
         FROM companies
-        WHERE handle = $1
-        `,[handle.toUpperCase()])
+        WHERE id = $1
+        `,[id])
       
-      Company.errIfNonexistent(company.rows[0])
+      Job.errIfNonexistent(job.rows[0])
 
-      return company.rows[0]
+      return job.rows[0]
     } catch(e){
       throw e
     }
   }
 
-  static async updateCompany(handle, data) {
+  static async update(id, data) {
     try {
-      let queryData = partialUpdate('companies', data, 'handle', handle.toUpperCase());
+      let queryData = partialUpdate('jobs', data, 'id', id);
 
-      let company = await db.query(
+      let job = await db.query(
         queryData.query,queryData.values
       )
 
-      Company.errIfNonexistent(company.rows[0])
+      Job.errIfNonexistent(job.rows[0])
  
-      return company.rows[0];
+      return job.rows[0];
     } catch (e) {
       throw e;
     }
   }
 
-  static async deleteCompany(handle) {
+  static async delete(id) {
     try {
-      let company = await db.query(
-        `DELETE FROM companies
-        WHERE handle = $1
-        RETURNING handle
-        `,[handle.toUpperCase()]
+      let job = await db.query(
+        `DELETE FROM jobs
+        WHERE id = $1
+        RETURNING id
+        `,[id]
       );
 
-      Company.errIfNonexistent(company.rows[0])
+      Job.errIfNonexistent(job.rows[0])
 
-      return company.rows[0]
+      return job.rows[0]
     } catch (e) {
       throw e;
     }
@@ -113,4 +119,4 @@ class Job {
 
 }
 
-module.exports = Company;
+module.exports = Job;
