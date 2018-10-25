@@ -9,9 +9,7 @@ class Company {
    *  into the function for name, minEmp and maxEmp
    */
 
-  static async findAll(minEmployees,maxEmployees,search) {
-    try{
-        
+  static async findAll(minEmployees,maxEmployees,search) {        
         minEmployees = minEmployees || 0;
         maxEmployees = maxEmployees || 2147483646;
 
@@ -23,11 +21,14 @@ class Company {
 
         let companyRes;
 
+        // let selectPrefix = "SELECT handle,name,num_employees,description,logo_url"
+
+
         if(search){
           companyRes = await db.query(
               `SELECT handle,name,num_employees,description,logo_url
                   FROM companies
-                  WHERE name LIKE $1
+                  WHERE name LIKE $1                                     
                   AND num_employees > $2
                   AND num_employees < $3
               `,[`%${search}%`,minEmployees,maxEmployees])
@@ -41,11 +42,10 @@ class Company {
         }
 
         return companyRes.rows;
-    } catch(e){
-      throw e
-    }
+
   }
 
+  // "slugs" "Apple Computer" "apple-computer" (slugify)
   static async createCompany(handle,name,numEmployees,description,logoURL) {
     try{
       let company = await db.query(
@@ -111,9 +111,9 @@ class Company {
     }
   }
 
-  static findHandle(rows){
+  static errIfNonexistent(company){
     if(!rows){
-      let err = new Error('Not Found')
+      let err = new Error('No such company')
       err.status = 404;
       throw err
     }

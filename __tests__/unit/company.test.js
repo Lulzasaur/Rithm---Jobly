@@ -100,7 +100,7 @@ describe("findAll()", () => {
     expect(response).toEqual(
       [AAPL_DATA]
     );
-    expect(response.length).toBe(1)
+    expect(response.length).toBe(1)   // DEC desn't have employees
   });
 });
 
@@ -240,7 +240,7 @@ describe('updateCompany()', () => {
 
       Company.updateCompany(handle, data)
       .then(res => {
-        expect(res).toEqual({
+        expect(res).toBe({
           "handle": "AAPL",
           "name": "Apple Corporation",
           "num_employees": 40000,

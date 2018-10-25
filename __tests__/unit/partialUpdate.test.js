@@ -11,6 +11,16 @@ describe("partialUpdate()", () => {
       "query": "UPDATE test SET test_field_1=$1, test_field_3=$2, test_field_9=$3 WHERE test_field_1=$4 RETURNING *",
       "values": ["pickles","potatoes","apples","valueEqual"]
     });
+
+
+    // const response = sqlForPartialUpdate('test',{},'test_field_1','valueEqual');
+    // expect(response).toEqual({
+    //   "query": "UPDATE test SET test_field_1=$1, test_field_3=$2, test_field_9=$3 WHERE test_field_1=$4 RETURNING *",
+    //   "values": ["pickles","potatoes","apples","valueEqual"]
+    // });
+
+
+    
   }
 )});
 
