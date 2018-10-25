@@ -63,11 +63,11 @@ class Job {
   static async getOne(id) {
     try{
       let job = await db.query(
-        `SELECT id,title,salary,equity,company_handle,date_posted
-        FROM companies
+        `SELECT id,title,salary,equity,company_handle
+        FROM jobs
         WHERE id = $1
         `,[id])
-      
+
       Job.errIfNonexistent(job.rows[0])
 
       return job.rows[0]
