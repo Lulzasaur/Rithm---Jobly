@@ -62,8 +62,10 @@ class Job {
 
   static async getOne(id) {
     try{
+
       let job = await db.query(
-        `SELECT id,title,salary,equity,company_handle
+        `
+        SELECT id,title,salary,equity,company_handle
         FROM jobs
         WHERE id = $1
         `,[id])
@@ -79,7 +81,6 @@ class Job {
   static async update(id, data) {
     try {
       let queryData = partialUpdate('jobs', data, 'id', id);
-
       let job = await db.query(
         queryData.query,queryData.values
       )
