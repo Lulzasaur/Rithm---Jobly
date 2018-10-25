@@ -1,7 +1,8 @@
 const express = require("express");
 const router = new express.Router();
 const { validate } = require('jsonschema');
-const jobSchema = require(`../schema/jobSchema.json`)
+const jobSchema = require(`../schema/jobSchema.json`);
+const updateJobSchema = require(`../schema/updateJobSchema.json`)
 const Job = require('../models/jobModels');
 
 /* 
@@ -47,6 +48,38 @@ router.get('/:id', async function(req, res, next) {
     let { id } = req.params;
     const job = await Job.getOne(id);
     return res.json({job});
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+router.patch('/:id', async function(req, res, next) {
+  try {
+    let { id } = req.params;
+
+    let result = validate(req.body, updateJobSchema);
+
+    if (!result.valid)
+      return next(result.errors.map(e => e.stack));
+
+    const data = req.body;
+    const job = await Job.update(id, data);
+
+    return res.json({job})
+  } catch (err) {
+    next(err);
+  }
+})
+
+
+router.delete('/:id', async function(req, res, next) {
+  try{
+    let { id } = req.params;
+
+    let result = await Job.delete(id);
+
+    return res.json({message: 'Job deleted'})
   } catch (err) {
     next(err);
   }
