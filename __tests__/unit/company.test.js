@@ -212,7 +212,7 @@ describe('createCompany()', () => {
 
       Company.createCompany(handle, name, num_employees, description, logo_url)
       .then(res => {
-        console.log("This should have thrown an error");
+        console.log("This should have thrown an error", res);
       })
       .catch(err => {
         expect(err.status).toEqual(400);
