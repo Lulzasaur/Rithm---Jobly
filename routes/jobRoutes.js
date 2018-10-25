@@ -14,7 +14,7 @@ Job Model:
 
 */
 
-router.get("/", async function (req, res, next) {
+router.get('/', async function(req, res, next) {
   try {
     let {minSalary, minEquity, search} = req.body;
 
@@ -26,4 +26,36 @@ router.get("/", async function (req, res, next) {
   }
 });
 
+
+router.get('/:id', async function(req, res, next) {
+  try {
+    let { id } = req.params;
+
+    const job = await Job.getOne(id);
+
+    return res.json({job});
+  } catch (err) {
+    next(err);
+  }
+})
+
 module.exports = router;
+
+
+/*
+
+try {
+  const result = validate(req.body, companySchema);
+
+  if(!result.valid){
+    return next(result.errors.map(error => error.stack));
+  } else{
+    let {handle,name,num_employees,description,logo_url} = req.body
+    const companyResp = await Company.createCompany(handle,name,num_employees,description,logo_url);
+    return res.json({ company:companyResp });
+  }
+} catch (err) {
+  return next(err);
+}
+
+*/
