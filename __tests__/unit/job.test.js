@@ -305,110 +305,73 @@ describe('update()', () => {
       })
     }
   );
-});
 
   // test SOME fields for job
   it("Should return JSON containing the new job data, updating SOME fields",
     async function() {
-      let id = 'aapl'
+      let id = 3
       let data = {
-        "name": "Apple Corporation",
-        "num_employees": 40000
+        "company_handle": "aapl"
       }
 
-      Company.updateCompany(handle, data)
+      Job.update(id, data)
       .then(res => {
-        expect(res).toEqual({
-          "handle": "AAPL",
-          "name": "Apple Corporation",
-          "num_employees": 40000,
-          "description": "Computer maker",
-          "logo_url": "www.apple.com"
-        })
+        expect(res.id).toEqual(id)
+        expect(res.company_handle).toEqual(data.company_handle)
       })
-      .catch(err => {
-        expect(err.status).toEqual(404);
-      });
     }
   );
 
-//   // test for not existing company handle
-//   it("Should return 404 error",
-//     async function() {
-//       let handle = 'something fake'
-//       let data = {
-//         "name": "Apple Corporation",
-//         "num_employees": 40000
-//       }
+  // test for not existing job id
+  it("Should return 404 error",
+    async function() {
+      let id = 9999
+      let data = {
+        "company_handle": "aapl"
+      }
 
-//       Company.updateCompany(handle, data)
-//       .then(res => {
-//         expect(res).toEqual({
-//           "handle": "AAPL",
-//           "name": "Apple Corporation",
-//           "num_employees": 40000,
-//           "description": "Computer maker",
-//           "logo_url": "www.apple.com"
-//         })
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
-
-//   it("Should throw a 404 error",
-//   async function() {
-//     let handle = 'aapl';
-//     let data = {
-//       "_name": "Apple Corporation",
-//       "_num_employees": 40000
-//     };
-
-//     Company.updateCompany(handle, data)
-//     .then(res => {
-//       console.log('This should throw an error');
-//     })
-//     .catch(err => {
-//       expect(err.status).toEqual(400);
-//     })
-//   })
-// });
-
-
-
+      Job.update(id, data)
+      .then(res => {
+        expect(res).toEqual('there should be an error')
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      });
+    }
+  );
+});
 
 // /***********************************/
 // /** TEST: deleteCompany() */
 
-// describe('deleteCompany()', () => {
-//   // test for delete with existing company handle
-//   it("Should return the handle that was deleted",
-//     async function() {
-//       let handle = 'AAPL';
+describe('deleteJob()', () => {
+  // test for delete with existing job id
+  it("Should return the id that was deleted",
+    async function() {
+      let id = 2;
 
-//       Company.deleteCompany(handle)
-//       .then(res => {
-//         expect(res).toEqual({handle});
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
+      Job.delete(id)
+      .then(res => {
+        expect(res).toEqual({id});
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      });
+    }
+  );
 
-//   // test for not existing company handle
-//   it("Should throw a 404 error",
-//     async function() {
-//       let handle = 'something fake';
+  // test for not existing company handle
+  it("Should throw a 404 error",
+    async function() {
+      let id = 8347;
 
-//       Company.deleteCompany(handle)
-//       .then(res => {
-//         expect(res).toEqual(handle);
-//       })
-//       .catch(err => {
-//         expect(err.status).toBe(404);
-//       });
-//     }
-//   );
-// });
+      Job.delete(id)
+      .then(res => {
+        expect(res).toEqual(id);
+      })
+      .catch(err => {
+        expect(err.status).toBe(404);
+      });
+    }
+  );
+});
