@@ -5,7 +5,7 @@ const app = require("../../app");
 
 const AAPL_JOB = {
 	id: 1,
-	title: "CEO",
+	title: "ceo",
 	salary: 210 * 1000,
 	equity: 0.7,
 	company_handle: "aapl"
@@ -13,7 +13,7 @@ const AAPL_JOB = {
 
 const DPW_JOB = {
 	id: 2,
-	title: "CTO",
+	title: "cto",
 	salary: 120 * 1000,
 	equity: 0.3,
 	company_handle: "dpw",
@@ -52,7 +52,7 @@ beforeEach(async () => {
     num_employees,
     description,
     logo_url) 
-    VALUES ('AAPL','Apple Inc','10000','Computer maker','www.apple.com') `
+    VALUES ('aapl','Apple Inc','10000','Computer maker','www.apple.com') `
   );
 
   await db.query(`INSERT INTO companies (
@@ -61,7 +61,7 @@ beforeEach(async () => {
     num_employees,
     description,
     logo_url) 
-    VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com')`
+    VALUES ('dpw','Digital Power Corp','10','Snake oil salesmen','www.dpw.com')`
   );
 
 
@@ -101,8 +101,8 @@ describe("GET /", () => {
 
     expect(response.status).toEqual(200);
 		expect(response.body.jobs.length).toEqual(2);
-		expect(response.body.jobs[0].company_handle).toEqual('AAPL');
-		expect(response.body.jobs[1].company_handle).toEqual('DPW');
+		expect(response.body.jobs[0].company_handle).toEqual(AAPL_JOB.company_handle);
+		expect(response.body.jobs[1].company_handle).toEqual(DPW_JOB.company_handle);
 	});
 });
 
@@ -117,8 +117,8 @@ describe("GET /jobs", () => {
 
 		expect(response.status).toEqual(200);
 		expect(response.body.job.id).toEqual(jobID);
-		expect(response.body.job.company_handle).toEqual('AAPL');
-		expect(response.body.job.title).toEqual('CEO');
+		expect(response.body.job.company_handle).toEqual(AAPL_JOB.company_handle);
+		expect(response.body.job.title).toEqual(AAPL_JOB.title);
 	});
 });
 
@@ -128,7 +128,7 @@ describe("GET /jobs", () => {
 describe('POST /jobs', () => {
 	test("Should respond with the new job fields", async() => {
 		let data = {
-			title: "CFO",
+			title: "cfo",
 			salary: 115000,
 			equity: 0.4,
 			company_handle: 'aapl'
@@ -136,13 +136,11 @@ describe('POST /jobs', () => {
 
     const response = await request(app).post('/jobs').send(data);
 
-    console.log(response.body);
-
 		expect(response.status).toEqual(200);
 		expect(response.body.job.title).toEqual(data.title);
 		expect(response.body.job.salary).toEqual(data.salary);
-		expect(response.body.equity).toEqual(data.equity);
-		expect(response.body.company_handle).toEqual(data.company_handle);
+		expect(response.body.job.equity).toEqual(data.equity);
+		expect(response.body.job.company_handle).toEqual(data.company_handle);
 	})
 });
 
