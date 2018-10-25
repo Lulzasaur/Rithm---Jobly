@@ -144,35 +144,44 @@ describe('POST /jobs', () => {
 	})
 });
 
-// /*******************/
-// /** UPDATE a job */
+/*******************/
+/** UPDATE a job */
 
-// describe('PATCH /jobs/:id', () => {
-// 	test("Should respond with the updated job fields", async() => {
-// 		let id = 2;
-// 		let data = {
-// 			title: 'Software engineer',
-// 			salary: 90000
-// 		};
+describe('PATCH /jobs/:id', () => {
+	test("Should respond with the updated job fields", async() => {
+		let id = 2;
+		let data = {
+			title: 'Software engineer',
+			salary: 90000
+		};
 
-// 		const response = await request(app).patch(`/jobs/${id}`);
+    const response = await request(app).patch(`/jobs/${id}`).send(data);
+    
+		expect(response.status).toEqual(200);
+		expect(response.body.job.title).toEqual(data.title);
+		expect(response.body.job.salary).toEqual(data.salary);
+	});
+});
 
-// 		expect(response.status).toEqual(200);
-// 		expect(response.body.job.title).toEqual(data.title);
-// 		expect(response.body.job.salary).toEqual(data.salary);
-// 	});
-// });
+/*******************/
+/** DELETE a job */
 
-// /*******************/
-// /** DELETE a job */
+describe('DELETE /jobs/:id', () => {
+	test("Should respond with a message 'Job deleted'", async() => {
+		let id = 2;
 
-// describe('DELETE /jobs/:id', () => {
-// 	test("Should respond with a message 'Job deleted'", async() => {
-// 		let id = 1;
+		const response = await request(app).delete(`/jobs/${id}`);
 
-// 		const response = await request(app).delete(`/jobs/${id}`);
+		expect(response.body.message).toEqual('Job deleted');
+		expect(response.status).toEqual(200);
+  });
+  
+  test("Should respond with a message 'No such job'", async() => {
+		let id = 1;
 
-// 		expect(response.body.message).toEqual('Job deleted');
-// 		expect(response.status).toEqual(200);
-// 	});
-// })
+		const response = await request(app).delete(`/jobs/${id}`);
+
+		expect(response.body.message).toEqual('No such job');
+		expect(response.status).toEqual(404);
+	});
+})
