@@ -304,6 +304,23 @@ describe('updateCompany()', () => {
       });
     }
   );
+
+  it("Should throw a 404 error",
+  async function() {
+    let handle = 'aapl';
+    let data = {
+      "_name": "Apple Corporation",
+      "_num_employees": 40000
+    };
+
+    Company.updateCompany(handle, data)
+    .then(res => {
+      console.log('This should throw an error');
+    })
+    .catch(err => {
+      expect(err.status).toEqual(400);
+    })
+  })
 });
 
 
