@@ -10,8 +10,8 @@ class Company {
    */
 
   static async findAll(minEmployees,maxEmployees,search) {        
-        minEmployees = minEmployees || 0;
-        maxEmployees = maxEmployees || 2147483646;
+        minEmployees = (minEmployees===undefined) ? 0 : minEmployees;
+        maxEmployees = (maxEmployees===undefined) ? 2147483646 : maxEmployees;
 
         if(maxEmployees<minEmployees){
           let err = new Error('Max employees is greater than Min employees');

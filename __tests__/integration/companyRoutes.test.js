@@ -70,6 +70,17 @@ describe("GET /", () => {
   );
     expect(response.statusCode).toBe(200);
   });
+
+  test("It should respond with an error", async () => {
+    const response = await request(app).get("/companies?minEmployees=100&maxEmployees=0");
+    expect(response.body).toEqual(
+      {"error": 
+        {"status": 400},
+        "message": "Max employees is greater than Min employees"
+      }
+  );
+    expect(response.statusCode).toBe(400);
+  });
 });
 
 //test for adding a company
@@ -112,6 +123,36 @@ describe("POST /", () => {
     expect(response.statusCode).toBe(500);
   });
 
+  test("It should respond with an error", async () => {
+    const response = await request(app).post("/companies").send(
+      {
+        "description": "Computer maker", 
+        "handle": "AAPL", 
+        "logo_url": "www.apple.com", 
+        "name": "Apple Inc", 
+        "num_employees": 10000
+      }
+  );
+    expect(response.body).toEqual(
+      {"error": 
+        {"code": "23505", 
+        "constraint": "companies_pkey", 
+        "detail": "Key (handle)=(AAPL) already exists.", 
+        "file": "nbtinsert.c", 
+        "length": 199, 
+        "line": "434", 
+        "name": "error", 
+        "routine": "_bt_check_unique", 
+        "schema": "public", 
+        "severity": "ERROR", 
+        "table": "companies"
+      }, 
+        "message": "duplicate key value violates unique constraint \"companies_pkey\""
+      }
+  );
+    expect(response.statusCode).toBe(500);
+  });
+
 });
 
 //test for viewing a single company
@@ -131,6 +172,17 @@ describe("GET /", () => {
       }
   );
     expect(response.statusCode).toBe(200);
+  });
+
+  test("It should respond with an error", async () => {
+    const response = await request(app).get("/companies/DSFSD");
+    expect(response.body).toEqual(
+      {
+        "error": {"status": 404}, 
+        "message": "No such company"
+      }
+  );
+    expect(response.statusCode).toBe(404);
   });
 });
 
@@ -156,6 +208,23 @@ describe("PATCH /", () => {
           }
   });
     expect(response.statusCode).toBe(200);
+  });
+
+  test("It should respond with an error", async () => {
+    const response = await request(app).patch("/companies/SDAF").send(
+          {
+              "name":"FUNDING SECURED",
+              "num_employees": 2000000,
+              "description": "FUNDING SECURED",
+              "logo_url": "www.FUNDINGSECURED.com"
+          }
+    );
+    expect(response.body).toEqual(
+      {
+        "error": {"status": 404}, 
+        "message": "No such company"
+    });
+    expect(response.statusCode).toBe(404);
   });
 
   test("It should respond with an error for schema validation", async () => {
