@@ -11,6 +11,9 @@ app.use('/companies', companyRoutes)
 const jobRoutes = require('./routes/jobRoutes');
 app.use('/jobs', jobRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/users', userRoutes);
+
 // add logging system
 
 const morgan = require("morgan");
