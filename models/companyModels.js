@@ -45,7 +45,8 @@ class Company {
 
   }
 
-  // "slugs" "Apple Computer" "apple-computer" (slugify)
+  /** Create a new company with the given details */
+
   static async create(handle,name,numEmployees,description,logoURL) {
     try{
       if (handle === undefined || name === undefined) {
@@ -66,6 +67,8 @@ class Company {
     }
   }
 
+  /** Returns a single company with given company handle */
+
   static async getOne(handle) {
     try{
       let company = await db.query(
@@ -81,6 +84,8 @@ class Company {
       throw e
     }
   }
+
+  /** Update a company's details */
 
   static async update(handle, data) {
     try {
@@ -98,6 +103,8 @@ class Company {
     }
   }
 
+  /** Delete a company */
+
   static async delete(handle) {
     try {
       let company = await db.query(
@@ -114,6 +121,8 @@ class Company {
       throw e;
     }
   }
+
+  /** Return array of jobs for given company */
 
   static async getJobs(handle) {
     try {
@@ -133,6 +142,8 @@ class Company {
     }
   }
 
+  /** Throw 404 if company handle does not exist */
+  
   static errIfNonexistent(company){
     if(!company){
       let err = new Error('No such company')
