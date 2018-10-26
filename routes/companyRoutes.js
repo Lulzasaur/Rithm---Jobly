@@ -37,7 +37,6 @@ router.get("/:handle", async function (req, res, next) {
     let handle = req.params.handle
     const company = await Company.getOne(handle);
     company.jobs = await Company.getJobs(handle);
-    console.log('/:handle', company)
     return res.json({ company });
   } catch (err) {
     return next(err);

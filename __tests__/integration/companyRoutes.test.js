@@ -38,7 +38,7 @@ beforeAll(async () => {
 			title TEXT NOT NULL,
 			salary FLOAT NOT NULL,
 			equity FLOAT NOT NULL CHECK (equity<1), 
-			company_handle TEXT REFERENCES companies(handle),
+			company_handle TEXT REFERENCES companies(handle) ON DELETE CASCADE,
 			date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`
 	);
 });
@@ -150,7 +150,7 @@ describe("POST /", () => {
             "description": "FUNDING SECURED",
             "logo_url": "www.fundingsecured.com"
           }
-  });
+    });
     expect(response.statusCode).toBe(200);
   });
 
@@ -205,18 +205,11 @@ describe("POST /", () => {
 describe("GET /:handle", () => {
   test("It should respond with a company", async () => {
     const response = await request(app).get("/companies/aapl");
-    expect(response.body).toEqual(
-      {
-        "company": 
-          {
-            "description": "Computer maker", 
-            "handle": "aapl", 
-            "logo_url": "www.apple.com", 
-            "name": "Apple Inc", 
-            "num_employees": 10000
-          }
-      }
-  );
+
+    expect(response.body.company.handle).toEqual('aapl');
+    expect(response.body.company.logo_url).toEqual('www.apple.com');
+    expect(response.body.company.name).toEqual('Apple Inc');
+    expect(response.body.company.jobs[0].company_handle).toEqual('aapl');
     expect(response.statusCode).toBe(200);
   });
 
