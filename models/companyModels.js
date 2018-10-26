@@ -110,8 +110,7 @@ class Company {
       let company = await db.query(
         `DELETE FROM companies
         WHERE handle = $1
-        RETURNING handle
-        `,[handle.toLowerCase()]
+        RETURNING handle`,[handle.toUpperCase()]
       );
 
       Company.errIfNonexistent(company.rows[0])
