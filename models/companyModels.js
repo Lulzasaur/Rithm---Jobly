@@ -59,7 +59,7 @@ class Company {
         `INSERT INTO companies (handle,name,num_employees,description,logo_url)
         VALUES ($1,$2,$3,$4,$5)
         RETURNING handle,name,num_employees,description,logo_url
-        `,[handle,name,numEmployees,description,logoURL])
+        `,[handle.toLowerCase(),name.toLowerCase(),numEmployees,description,logoURL.toLowerCase()])
 
       return company.rows[0]
     } catch(e){
@@ -75,7 +75,7 @@ class Company {
         `SELECT handle,name,num_employees,description,logo_url
         FROM companies
         WHERE handle = $1
-        `,[handle.toUpperCase()])
+        `,[handle.toLowerCase()])
       
       Company.errIfNonexistent(company.rows[0])
 
@@ -89,7 +89,7 @@ class Company {
 
   static async update(handle, data) {
     try {
-      let queryData = partialUpdate('companies', data, 'handle', handle.toUpperCase());
+      let queryData = partialUpdate('companies', data, 'handle', handle.toLowerCase());
 
       let company = await db.query(
         queryData.query,queryData.values
@@ -110,7 +110,7 @@ class Company {
       let company = await db.query(
         `DELETE FROM companies
         WHERE handle = $1
-        RETURNING handle`,[handle.toUpperCase()]
+        RETURNING handle`,[handle.toLowerCase()]
       );
 
       Company.errIfNonexistent(company.rows[0])
@@ -130,7 +130,7 @@ class Company {
         FROM jobs
         JOIN companies ON companies.handle = jobs.company_handle
         WHERE company_handle = $1 
-        `,[handle.toUpperCase()]
+        `,[handle.toLowerCase()]
       );
 
       Company.errIfNonexistent(company.rows[0])
