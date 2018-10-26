@@ -360,7 +360,7 @@ describe('update()', () => {
 
 
 
-/***********************************/
+/*******************/
 /** TEST: delete() */
 
 describe('delete()', () => {
@@ -395,3 +395,23 @@ describe('delete()', () => {
   );
 });
 
+
+/*******************/
+/** TEST: getJobs() */
+
+describe('getJobs()', () => {
+  it("Should return an array of jobs for AAPL",
+    async function() {
+      let handle = 'AAPL';
+
+      Company.getJobs(hanlde)
+      .then(res => {
+        console.log(res);
+        expect(res.status).toEqual(200);
+      })
+      .catch(err) {
+        expect(err.status).toEqual(404);
+      }
+    }  
+  )
+});
