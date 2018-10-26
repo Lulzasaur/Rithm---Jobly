@@ -135,7 +135,7 @@ class Company {
 
       Company.errIfNonexistent(company.rows[0])
 
-      return company.rows[0]
+      return company.rows
     } catch (e) {
       throw e;
     }

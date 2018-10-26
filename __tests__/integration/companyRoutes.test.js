@@ -3,46 +3,91 @@ const db = require("../../db");
 const request = require("supertest");
 const app = require("../../app");
 
+
+
+const AAPL_JOB = {
+	id: 1,
+	title: "ceo",
+	salary: 210 * 1000,
+	equity: 0.7,
+	company_handle: "aapl"
+};
+
+const DPW_JOB = {
+	id: 2,
+	title: "cto",
+	salary: 120 * 1000,
+	equity: 0.3,
+	company_handle: "dpw",
+};
+
+
 // set up table
 beforeAll(async () => {
-  await db.query(`CREATE TABLE companies (
-    handle TEXT PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    num_employees INTEGER,
-    description TEXT, 
-    logo_url TEXT
-  )`)
+  
+	await db.query(`CREATE TABLE companies (
+		handle TEXT PRIMARY KEY,
+		name TEXT NOT NULL UNIQUE,
+		num_employees INTEGER,
+		description TEXT, 
+    logo_url TEXT)`
+  );
+  
+	await db.query(`CREATE TABLE jobs (
+			id SERIAL PRIMARY KEY,
+			title TEXT NOT NULL,
+			salary FLOAT NOT NULL,
+			equity FLOAT NOT NULL CHECK (equity<1), 
+			company_handle TEXT REFERENCES companies(handle),
+			date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`
+	);
 });
+
 
 beforeEach(async () => {
-// seed with some data
-await db.query(`INSERT INTO companies (
-   handle,
-   name,
-   num_employees,
-   description,
-   logo_url) 
-  VALUES ('AAPL','Apple Inc','10000','Computer maker','www.apple.com') 
-  `);
+  await db.query(`INSERT INTO companies (
+    handle,
+    name,
+    num_employees,
+    description,
+    logo_url) 
+    VALUES ('aapl','Apple Inc','10000','Computer maker','www.apple.com')`
+  );
 
-await db.query(`INSERT INTO companies (
-  handle,
-  name,
-  num_employees,
-  description,
-  logo_url) 
- VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
- `);
+  await db.query(`INSERT INTO companies (
+    handle,
+    name,
+    num_employees,
+    description,
+    logo_url) 
+    VALUES ('dpw','Digital Power Corp','10','Snake oil salesmen','www.dpw.com')`
+  );
+
+  await db.query(
+    `INSERT INTO jobs (id, title,salary,equity,company_handle)
+    VALUES (2, $1, $2, $3, $4)`,
+    [AAPL_JOB.title, AAPL_JOB.salary, AAPL_JOB.equity, AAPL_JOB.company_handle]
+  );
+
+  await db.query(
+    `INSERT INTO jobs (id, title,salary,equity,company_handle)
+    VALUES (3, $1, $2, $3, $4)`,
+    [DPW_JOB.title, DPW_JOB.salary, DPW_JOB.equity, DPW_JOB.company_handle]
+  );
 });
 
+
 afterEach(async () => {
-await db.query("DELETE FROM companies");
+  await db.query("DELETE FROM jobs");
+  await db.query("DELETE FROM companies");
 });
 
 afterAll(async () => {
-await db.query("DROP TABLE companies");
-db.end();
+  await db.query("DROP TABLE jobs");
+  await db.query("DROP TABLE companies");
+  db.end();
 });
+
 
 //test for handling main page for pulling all company info
 describe("GET /", () => {
@@ -53,21 +98,21 @@ describe("GET /", () => {
         "company": [
           {
             "description": "Computer maker", 
-            "handle": "AAPL", 
+            "handle": "aapl", 
             "logo_url": "www.apple.com", 
             "name": "Apple Inc", 
             "num_employees": 10000
           }, 
           {
             "description": "Snake oil salesmen", 
-            "handle": "DPW", 
+            "handle": "dpw", 
             "logo_url": "www.dpw.com", 
             "name": "Digital Power Corp", 
             "num_employees": 10
           }
         ]
       }
-  );
+    );
     expect(response.statusCode).toBe(200);
   });
 
@@ -88,6 +133,7 @@ describe("POST /", () => {
   test("It should respond with the new company added", async () => {
     const response = await request(app).post("/companies").send(
           {
+              // "add_at": expect.any(Date),
               "handle": "TSLA",
               "name":"Tesla, Inc.",
               "num_employees": 2000,
@@ -98,11 +144,11 @@ describe("POST /", () => {
     expect(response.body).toEqual({
       "company": 
           {
-            "handle": "TSLA",
-            "name":"Tesla, Inc.",
+            "handle": "tsla",
+            "name":"tesla, inc.",
             "num_employees": 2000,
             "description": "FUNDING SECURED",
-            "logo_url": "www.FUNDINGSECURED.com"
+            "logo_url": "www.fundingsecured.com"
           }
   });
     expect(response.statusCode).toBe(200);
@@ -112,10 +158,10 @@ describe("POST /", () => {
     const response = await request(app).post("/companies").send(
           {
             "handle": 2342342,
-            "name":"Tesla, Inc.",
+            "name":"tesla, inc.",
             "num_employees": 2000,
             "description": "FUNDING SECURED",
-            "logo_url": "www.FUNDINGSECURED.com"
+            "logo_url": "www.fundingsecured.com"
           }
     );
     expect(response.body).toEqual({"error": ["instance.handle is not of a type(s) string"]}
@@ -127,7 +173,7 @@ describe("POST /", () => {
     const response = await request(app).post("/companies").send(
       {
         "description": "Computer maker", 
-        "handle": "AAPL", 
+        "handle": "aapl", 
         "logo_url": "www.apple.com", 
         "name": "Apple Inc", 
         "num_employees": 10000
@@ -137,7 +183,7 @@ describe("POST /", () => {
       {"error": 
         {"code": "23505", 
         "constraint": "companies_pkey", 
-        "detail": "Key (handle)=(AAPL) already exists.", 
+        "detail": "Key (handle)=(aapl) already exists.", 
         "file": "nbtinsert.c", 
         "length": 199, 
         "line": "434", 
@@ -156,15 +202,15 @@ describe("POST /", () => {
 });
 
 //test for viewing a single company
-describe("GET /", () => {
-  test("It should respond with an array of companies", async () => {
+describe("GET /:handle", () => {
+  test("It should respond with a company", async () => {
     const response = await request(app).get("/companies/aapl");
     expect(response.body).toEqual(
       {
         "company": 
           {
             "description": "Computer maker", 
-            "handle": "AAPL", 
+            "handle": "aapl", 
             "logo_url": "www.apple.com", 
             "name": "Apple Inc", 
             "num_employees": 10000
@@ -200,7 +246,7 @@ describe("PATCH /", () => {
     expect(response.body).toEqual({
       "company": 
           {
-            "handle": "AAPL",
+            "handle": "aapl",
             "name":"FUNDING SECURED",
             "num_employees": 2000000,
             "description": "FUNDING SECURED",
