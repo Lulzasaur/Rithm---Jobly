@@ -195,6 +195,19 @@ describe('PATCH /jobs/:id', () => {
     const response = await request(app).patch(`/jobs/${id}`).send(data);
     
 		expect(response.status).toEqual(500);
+	});
+	
+
+  test("Should respond with 400 error", async() => {
+		let id = 2;
+		let data = {
+			titles: 100,
+			_saladry: "90000"
+		};
+
+    const response = await request(app).patch(`/jobs/${id}`).send(data);
+    
+		expect(response.status).toEqual(500);
   });
 });
 
