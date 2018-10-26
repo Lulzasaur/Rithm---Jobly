@@ -10,7 +10,7 @@ const AAPL_DATA = {
   "name": "Apple Inc",
   "num_employees": 10000,
   "description": "Computer maker",
-  "logo_url": "www.apple.com"
+  "logo_url": "www.apple.com",
 }
 
 /***********************************/
@@ -24,6 +24,15 @@ beforeAll(async () => {
     num_employees INTEGER,
     description TEXT, 
     logo_url TEXT
+  )`)
+
+  await db.query(`CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    salary FLOAT NOT NULL,
+    equity FLOAT NOT NULL CHECK (equity<1), 
+    company_handle TEXT REFERENCES companies(handle),
+    date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
   )`)
 });
 
@@ -46,14 +55,39 @@ beforeEach(async () => {
     logo_url) 
     VALUES ('DPW','Digital Power Corp','10','Snake oil salesmen','www.dpw.com') 
   `);
+
+  await db.query(`INSERT INTO jobs (
+    id,
+    title,
+    salary,
+    equity,
+    company_handle,
+    date_posted)
+    VALUES (2,'ceo','500000','.5','AAPL','2018-10-26T04:16:17.759Z') 
+  `);
+
+  await db.query(`INSERT INTO jobs (
+    id,
+    title,
+    salary,
+    equity,
+    company_handle,
+    date_posted)
+    VALUES (3,'janitor','900000','0.9','DPW','2018-10-26T04:16:17.759Z') 
+  `);
+
 });
 
 afterEach(async () => {
+  await db.query("DELETE FROM jobs");
   await db.query("DELETE FROM companies");
+  
 });
 
 afterAll(async () => {
+  await db.query("DROP TABLE jobs");
   await db.query("DROP TABLE companies");
+
   db.end();
 });
 

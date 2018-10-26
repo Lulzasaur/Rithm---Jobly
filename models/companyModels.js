@@ -104,6 +104,24 @@ class Company {
         `DELETE FROM companies
         WHERE handle = $1
         RETURNING handle
+        `,[handle.toLowerCase()]
+      );
+
+      Company.errIfNonexistent(company.rows[0])
+
+      return company.rows[0]
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static async getJobs(handle) {
+    try {
+      let company = await db.query(
+        `SELECT id, title, salary, equity, company_handle, date_posted
+        FROM jobs
+        JOIN companies ON companies.handle = jobs.company_handle
+        WHERE company_handle = $1 
         `,[handle.toUpperCase()]
       );
 

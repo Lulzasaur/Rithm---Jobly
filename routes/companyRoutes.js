@@ -4,6 +4,7 @@ const { validate } = require('jsonschema');
 const companySchema = require(`../schema/companySchema.json`)
 const editCompanySchema = require(`../schema/editCompanySchema.json`)
 const Company = require('../models/companyModels')
+const Job = require('../models/jobModels')
 
 router.get("/", async function (req, res, next) {
   try {
@@ -35,8 +36,9 @@ router.post("/", async function (req, res, next) {
 router.get("/:handle", async function (req, res, next) {
   try {
     let handle = req.params.handle
-    const companyResp = await Company.getOne(handle);
-    return res.json({ company:companyResp });
+    const companyData = await Company.getOne(handle);
+    const jobs = await Company.getJobs(handle);
+    return res.json({ company:{companyData,jobs}});
   } catch (err) {
     return next(err);
   }
