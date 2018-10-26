@@ -68,6 +68,11 @@ class User {
         queryData.query,queryData.values
       )
 
+      //if password is edited, do not return a password
+      if(user.password){
+        user.password=''
+      }
+
       User.errIfNonexistent(user.rows[0])
  
       return user.rows[0];
