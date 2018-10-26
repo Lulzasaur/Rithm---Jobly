@@ -218,7 +218,7 @@ describe('create()', () => {
 
         let { title, salary, equity, company_handle } = data;
      
-        Job.create(title, salary, equity,company_handle)
+      await Job.create(title, salary, equity,company_handle)
         .then(res => {
           expect(res).toEqual({ 
             title: 'brogrammer',
@@ -227,14 +227,11 @@ describe('create()', () => {
             company_handle: 'aapl' 
           });
         })
-        .catch(err => {
-          expect(err.status).toBe(404);
-        })
       } 
     );
 
   // test for create with missing non-required data
-  it("Should insert a new job with missing values as null",
+  it("Should throw an error as we have missing data",
     async function() {
       let data = {
         title: 'brogrammer',
@@ -244,17 +241,12 @@ describe('create()', () => {
 
       let { title,salary } = data;
 
-      Job.create(title,salary)
-      .then(res => {
-        expect(res).toEqual({
-          title: 'brogrammer',
-          salary: 40,
-          equity: 0.2,
-        });
-      })
-      .catch(err => {
-        expect(err.status).toBe(400);
-      })
+      await Job.create(title,salary)
+        .then(res => 
+          'Should throw an error')      
+        .catch(err => {
+          expect(err.status).toEqual(400);
+        })
     } 
   );
 
@@ -268,7 +260,7 @@ describe('create()', () => {
 
       let { handle, name, num_employees, description, logo_url } = data;
 
-      Job.create(handle, name, num_employees, description, logo_url)
+    await Job.create(handle, name, num_employees, description, logo_url)
       .then(res => {
         console.log("This should have thrown an error", res);
       })
