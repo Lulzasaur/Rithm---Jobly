@@ -36,7 +36,7 @@ beforeAll(async () => {
     title TEXT NOT NULL,
     salary FLOAT NOT NULL,
     equity FLOAT NOT NULL CHECK (equity<1), 
-    company_handle TEXT REFERENCES companies(handle),
+    company_handle TEXT REFERENCES companies(handle) ON DELETE CASCADE,
     date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
   )`)
 });

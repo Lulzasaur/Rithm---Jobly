@@ -4,7 +4,6 @@ const { validate } = require('jsonschema');
 const companySchema = require(`../schema/companySchema.json`)
 const editCompanySchema = require(`../schema/editCompanySchema.json`)
 const Company = require('../models/companyModels')
-// const Job = require('../models/jobModels')
 
 router.get("/", async function (req, res, next) {
   try {
